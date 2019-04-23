@@ -6,11 +6,13 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.json.JSONArray;
+
 import com.hungry.models.Status;
 
 @Entity
 @Table(name="hungry_users")
-public class HungryUser extends Status {
+public class User extends Status  {
 
 	@Id
 	@Column(name="user_id")
@@ -28,20 +30,20 @@ public class HungryUser extends Status {
 	private String registrationDate;
 	@Column(name="user_password")
 	private String password;
-	@Column(name="orders_history")
-	private String ownOrders;
+	@Column(name="orders_id")
+	private JSONArray OrdersId;
 	@Embedded
     private AccessToken accessToken;
 	
 	
 
-	public HungryUser() {
+	public User() {
 		super();
 	}
 	
 	
 
-	public HungryUser(String firstName, String lastName, String phone, String userImg, String registrationDate,
+	public User(String firstName, String lastName, String phone, String userImg, String registrationDate,
 			String password) {
 		super();
 		this.firstName = firstName;
@@ -54,7 +56,7 @@ public class HungryUser extends Status {
 
 
 
-	public HungryUser(String firstName, String lastName, String phone, String password) {
+	public User(String firstName, String lastName, String phone, String password) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -104,13 +106,7 @@ public class HungryUser extends Status {
 		this.password = password;
 	}
 
-	public String getOwnOrders() {
-		return ownOrders;
-	}
-
-	public void setOwnOrders(String ownOrders) {
-		this.ownOrders = ownOrders;
-	}
+	
 
 	public AccessToken getAccessToken() {
 		return accessToken;
@@ -146,12 +142,21 @@ public class HungryUser extends Status {
 
 
 
-	@Override
-	public String toString() {
-		return "HungryUser [hungryUserId=" + hungryUserId + ", firstName=" + firstName + ", lastName=" + lastName
-				+ ", phone=" + phone + ", userImg=" + userImg + ", registrationDate=" + registrationDate + ", password="
-				+ password + ", ownOrders=" + ownOrders + ", accessToken=" + accessToken + "]";
+	public JSONArray getOrdersId() {
+		return OrdersId;
 	}
 
+
+
+	public void setOrdersId(JSONArray ordersId) {
+		OrdersId = ordersId;
+	}
+
+	@Override
+	public String toString() {
+		return "User [hungryUserId=" + hungryUserId + ", firstName=" + firstName + ", lastName=" + lastName + ", phone="
+				+ phone + ", userImg=" + userImg + ", registrationDate=" + registrationDate + ", password=" + password
+				+ ", OrdersId=" + OrdersId + ", accessToken=" + accessToken + "]";
+	}
 
 }

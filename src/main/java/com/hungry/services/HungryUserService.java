@@ -8,9 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.hungry.entities.HungryUser;
+import com.hungry.entities.User;
 import com.hungry.models.Status;
-import com.hungry.models.User;
 import com.hungry.repositories.HungryUserRepository;
 
 @Service("hungryUserService")
@@ -22,7 +21,7 @@ public class HungryUserService {
 	@Autowired
 	private HungryUserRepository userRepository;
 
-	public boolean isSave(HungryUser user) {
+	public boolean isSave(User user) {
 		return userRepository.isSaved(user);
 	}
 

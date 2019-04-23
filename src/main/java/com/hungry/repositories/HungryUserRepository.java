@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import com.hungry.entities.AccessToken;
-import com.hungry.entities.HungryUser;
+import com.hungry.entities.User;
 import com.hungry.models.Status;
 
 import ch.qos.logback.classic.Logger;
@@ -23,12 +23,14 @@ public class HungryUserRepository {
 	@PersistenceContext
 	public EntityManager entityManager;
 
-	public boolean isSaved(HungryUser user) {
+	public boolean isSaved(User user) {
 		entityManager.persist(user);
 		return true;
 	}
 
 	public Status findHungryUserByPhone(String phone) {
+		
+		String message=null;
 
 		try {
 
@@ -50,11 +52,12 @@ public class HungryUserRepository {
 
 		} catch (Exception e) {
 			log.error("findHungryUserByPhone : " + e.getMessage());
-			return new Status(HungryUserRepository.class, "findHungryUserByPhone", e.getLocalizedMessage());
+			message=e.getMessage();
+			//return new Status(HungryUserRepository.class, "findHungryUserByPhone", e.getLocalizedMessage());
 			
 		}
 
-		return new Status(HungryUserRepository.class, "findHungryUserByPhone","");
+		return new Status(HungryUserRepository.class, "findHungryUserByPhone",message);
 	}
 
 }

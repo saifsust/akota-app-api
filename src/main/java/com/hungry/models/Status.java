@@ -1,10 +1,12 @@
 package com.hungry.models;
 
+import java.io.Serializable;
+
 import javax.persistence.Transient;
 
 import com.hungry.entities.AccessToken;
 
-public class Status {
+public class Status implements Serializable {
 	@Transient
 	private boolean success = true;
 	@Transient
@@ -23,12 +25,12 @@ public class Status {
 		this.message = message;
 		this.className = className;
 		this.method = method;
-		if (!this.message.equals(null) || !this.message.equals("")) {
+		if (!this.message.equals(null) || !this.message.equals("") || message == "") {
 			this.success = false;
-		}else this.message="Well Done";
-		
+		}
+
 		System.out.println(this.message);
-		
+
 	}
 
 	public boolean isSuccess() {
@@ -44,6 +46,8 @@ public class Status {
 	}
 
 	public String getMessage() {
+		if (this.message.equals("") || this.message.equals(null) || message == "")
+			return "Complete 200 ok";
 		return message;
 	}
 
@@ -51,10 +55,10 @@ public class Status {
 		this.message = message;
 		this.className = className;
 		this.method = method;
-		if (!this.message.equals(null) || !this.message.equals("")) {
+		if (!this.message.equals(null) || !this.message.equals("") || message == "") {
 			this.success = false;
-		}else this.message="Well Done";
-		
+		}
+
 	}
 
 	@Override
