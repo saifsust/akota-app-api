@@ -16,7 +16,7 @@ import ch.qos.logback.core.net.SyslogOutputStream;
 @Transactional
 public class DbManagerRepository {
 
-	private static final Logger log = (Logger) LoggerFactory.getLogger(HungryUserRepository.class);
+	private static final Logger log = (Logger) LoggerFactory.getLogger(UserRepository.class);
 
 	@PersistenceContext
 	private EntityManager em;
