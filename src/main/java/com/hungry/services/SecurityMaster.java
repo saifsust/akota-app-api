@@ -16,20 +16,29 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.hungry.util.TokenStatus;
+import com.hungry.util.Type;
 
 @Service
 public class SecurityMaster {
-
 	private static final Logger LOG = (Logger) LoggerFactory.getLogger(SecurityMaster.class);
+	@Autowired
+	private StatusMaster statusMaster;
+
+	@Autowired
+	private StringProessor processor;
 
 	private Random rand = new Random();
 	private final int MAX_RANGE = 999999999;
 	private final int MIN_RANGE = 100000000;
 	private static final int KEY_LENGTH = 16;
-	private static final int PLAINTEXT_LEN = 100;
+	private static final int PLAINTEXT_LEN = 200;
 
 	private String plaintext_generator() {
+
 		String plaintext = "";
 		for (int i = 0; i <= PLAINTEXT_LEN; ++i)
 			plaintext += randomChar();
@@ -57,34 +66,64 @@ public class SecurityMaster {
 		return new SecretKeySpec(key.getBytes(), "AES");
 	}
 
-	public String token() throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException,
-			IllegalBlockSizeException, BadPaddingException {
-		String key = key_generator();
-		Key aesKey = screct_key_generator(key);
-		Cipher cipher;
-		cipher = Cipher.getInstance("AES");
+	public String token(TokenStatus status, long userId, Type type) {
 
-		String plainText = plaintext_generator();
+		try {
+			String key = key_generator();
+			Key aesKey = screct_key_generator(key);
+			Cipher cipher;
+			cipher = Cipher.getInstance("AES");
 
-		cipher.init(Cipher.ENCRYPT_MODE, aesKey);
-		byte[] encrypted = cipher.doFinal(plainText.getBytes());
-		String token = Base64.getEncoder().encodeToString(encrypted);// new String(encrypted);
+			String plainText = statusMaster.push(plaintext_generator(), status);
+			plainText = processor.push_user_identification(plainText, userId);
+			plainText = processor.push_user_type(plainText, type);
 
-		return screct_key_adder(token, key);
+			LOG.info("token : status -> " + status + " | plainText -> " + plainText);
+
+			cipher.init(Cipher.ENCRYPT_MODE, aesKey);
+			byte[] encrypted = cipher.doFinal(plainText.getBytes());
+			String token = Base64.getEncoder().encodeToString(encrypted);
+
+			LOG.info("token : token -> " + token);
+
+			return screct_key_adder(token, key);
+
+		} catch (Exception e) {
+			LOG.error("token");
+			return null;
+		}
+
 	}
 
-	public String decript_token(String cipherText) throws NoSuchAlgorithmException, NoSuchPaddingException,
+	public Map<String, Object> decrypt(String token) throws NoSuchAlgorithmException, NoSuchPaddingException,
 			InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
 
-		Map<String, String> data = saparator(cipherText);
-		Key aesKey = screct_key_generator(data.get("KEY"));
-		Cipher cipher;
-		cipher = Cipher.getInstance("AES");
-		String CipherText = data.get("CIPHER");
-		byte[] token = Base64.getDecoder().decode(CipherText);
-		cipher.init(Cipher.DECRYPT_MODE, aesKey);
-		String decrypted = new String(cipher.doFinal(token));
-		return decrypted;
+		try {
+
+			LOG.info("status : token -> " + token);
+
+			Map<String, String> data = saparator(token);
+			Key aesKey = screct_key_generator(data.get("KEY"));
+			Cipher cipher;
+			cipher = Cipher.getInstance("AES");
+			String CipherText = data.get("CIPHER");
+			byte[] byteToken = Base64.getDecoder().decode(CipherText);
+			cipher.init(Cipher.DECRYPT_MODE, aesKey);
+			String decrypted = new String(cipher.doFinal(byteToken));
+
+			LOG.info("status : decrypt  -> " + decrypted);
+
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("token_status", statusMaster.seek(decrypted));
+			map.put("user_id", processor.seek_user_id(decrypted));
+			map.put("user_type", processor.seek_user_type(decrypted));
+			return map;
+
+		} catch (Exception e) {
+			LOG.error("status : " + e.getMessage());
+			return null;
+		}
+
 	}
 
 	private Map<String, String> saparator(String cipherText) {

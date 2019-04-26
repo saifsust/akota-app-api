@@ -1,14 +1,14 @@
 package com.hungry.models;
 
-public class User {
+public class Authentication {
 
 	private String phone;
 	private String password;
 	
-	public User() {
+	public Authentication() {
 		super();
 	}
-	public User(String phone, String password) {
+	public Authentication(String phone, String password) {
 		super();
 		this.phone = phone;
 		this.password = password;

@@ -1,47 +1,47 @@
 package com.hungry.entities;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.json.JSONArray;
 
 import com.hungry.models.Status;
 
 @Entity
-@Table(name="hungry_users")
-public class User extends Status  {
+@Table(name = "hungry_users")
+public class User implements Serializable {
 
 	@Id
-	@Column(name="user_id")
+	@Column(name = "user_id")
 	private int hungryUserId;
-	@Column(name="first_name")
+	@Column(name = "first_name")
 	private String firstName;
-	@Column(name="last_name")
+	@Column(name = "last_name")
 	private String lastName;
-	@Column(name="phone_number")
+	@Column(name = "phone_number")
 	private String phone;
-	@Column(name="user_img")
+	@Column(name = "user_img")
 	private String userImg;
-	
-	@Column(name="registration_date")
+
+	@Column(name = "registration_date")
 	private String registrationDate;
-	@Column(name="user_password")
+	@Column(name = "user_password")
 	private String password;
-	@Column(name="orders_id")
+	// @Column(name="orders_id")
+	@Transient
 	private JSONArray OrdersId;
 	@Embedded
-    private AccessToken accessToken;
-	
-	
+	private AccessToken accessToken;
 
 	public User() {
 		super();
 	}
-	
-	
 
 	public User(String firstName, String lastName, String phone, String userImg, String registrationDate,
 			String password) {
@@ -53,8 +53,6 @@ public class User extends Status  {
 		this.registrationDate = registrationDate;
 		this.password = password;
 	}
-
-
 
 	public User(String firstName, String lastName, String phone, String password) {
 		super();
@@ -88,8 +86,6 @@ public class User extends Status  {
 		this.lastName = lastName;
 	}
 
-
-
 	public String getRegistrationDate() {
 		return registrationDate;
 	}
@@ -106,8 +102,6 @@ public class User extends Status  {
 		this.password = password;
 	}
 
-	
-
 	public AccessToken getAccessToken() {
 		return accessToken;
 	}
@@ -115,38 +109,26 @@ public class User extends Status  {
 	public void setAccessToken(AccessToken accessToken) {
 		this.accessToken = accessToken;
 	}
-	
-	
 
 	public String getPhone() {
 		return phone;
 	}
 
-
-
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-
-
 
 	public String getUserImg() {
 		return userImg;
 	}
 
-
-
 	public void setUserImg(String userImg) {
 		this.userImg = userImg;
 	}
 
-
-
 	public JSONArray getOrdersId() {
 		return OrdersId;
 	}
-
-
 
 	public void setOrdersId(JSONArray ordersId) {
 		OrdersId = ordersId;

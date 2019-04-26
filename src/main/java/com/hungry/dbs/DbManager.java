@@ -43,9 +43,12 @@ public enum DbManager {
 	private String products() {
 		SQL = "create table if not exists " + DB + PREFIX + this.table
 				+ "(product_id int(22) auto_increment not null primary key,";
-		SQL += "product_name varchar(300),product_country_favor varchar(200),product_img text,";
-		SQL += "price double,launch_date date,discount double,";
-		SQL += "order_ids json)";
+		SQL += "product_name varchar(300),product_types json,product_img text,";
+		SQL += "price double,rating double,total_raters int,raters json,";
+		SQL += "discount double,discounted_sold_price double,discounted_sold_peices int,";
+		SQL += "total_sold_price double,total_sold_peices int,total_orders int,";
+		SQL += "order_ids json,total_reviewers int ,reviewers_ids json,";
+		SQL += "launch timestamp)";
 		return SQL;
 
 	}

@@ -2,7 +2,6 @@ package com.hungry.services;
 
 import org.springframework.stereotype.Service;
 
-import com.hungry.util.TokenStatus;
 import com.hungry.util.Type;
 
 @Service
