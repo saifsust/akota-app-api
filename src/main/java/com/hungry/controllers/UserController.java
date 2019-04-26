@@ -35,32 +35,12 @@ public class UserController {
 	@Autowired
 	public UserService userService;
 
-	@Autowired
-	public DbManagerService service;
-
-	@Autowired
-	private SecurityMaster securityMaster;
-
 	private AccessToken accessToken;
 
 	@PostMapping(value = "/registration", consumes = { "application/json" })
 	public @ResponseBody ResponseEntity<AccessToken> isRegistrationComplete(@RequestBody User user) {
-
-		try {
-
-			log.info("recieve : isRegistrationComplete : " + user.toString());
-			Date date = new Date();
-			long time = date.getTime();
-			Timestamp ts = new Timestamp(time);
-			/*AccessToken accessToken = new AccessToken(securityMaster.token() , 84600, ts);
-
-			user.setAccessToken(accessToken);*/
-
-			userService.persist(user);
-			return new ResponseEntity<AccessToken>(accessToken, HttpStatus.CREATED);
-		} catch (Exception ex) {
-			return new ResponseEntity<AccessToken>(HttpStatus.NOT_ACCEPTABLE);
-		}
+		log.info("recieve : isRegistrationComplete : " + user.toString());
+		return userService.user_register(user);
 	}
 
 	@PostMapping(value = "/upload", consumes = { "multipart/form-data" })
@@ -73,13 +53,8 @@ public class UserController {
 	@PostMapping(value = "/authorization", consumes = { "application/json" })
 	public @ResponseBody ResponseEntity<AccessToken> isAuthorizedUser(@RequestBody Authentication authen) {
 		try {
-			System.out.println(authen);
 
-			service.execution();
-
-			AccessToken token = userService.isAuthorized(authen);
-			// log.info(token.toString());
-			return new ResponseEntity<AccessToken>(token, HttpStatus.OK);
+			return null;
 		} catch (Exception e) {
 			log.error(e.getCause().toString());
 			return new ResponseEntity<AccessToken>(HttpStatus.UNAUTHORIZED);
