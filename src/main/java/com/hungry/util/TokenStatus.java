@@ -1,7 +1,7 @@
 package com.hungry.util;
 
 public enum TokenStatus {
-	OK, ACCEPTED, NOT_ACCEPTED, CREATED, NOT_AUTHORATIVE, NOT_FOUND;
+	OK, ACCEPTED, NOT_ACCEPTED, CREATED, UNAUTHORIZED, NOT_FOUND, IM_USED;
 
 	public int value() {
 		switch (this) {
@@ -11,8 +11,10 @@ public enum TokenStatus {
 			return 201;
 		case ACCEPTED:
 			return 202;
-		case NOT_AUTHORATIVE:
-			return 203;
+		case IM_USED:
+			return 226;
+		case UNAUTHORIZED:
+			return 401;
 		case NOT_ACCEPTED:
 			return 406;
 		case NOT_FOUND:
@@ -30,8 +32,10 @@ public enum TokenStatus {
 			return CREATED;
 		case 202:
 			return ACCEPTED;
-		case 203:
-			return NOT_AUTHORATIVE;
+		case 226:
+			return IM_USED;
+		case 401:
+			return UNAUTHORIZED;
 		case 406:
 			return NOT_ACCEPTED;
 		case 404:
