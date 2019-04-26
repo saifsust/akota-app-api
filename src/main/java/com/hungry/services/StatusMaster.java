@@ -46,8 +46,10 @@ public class StatusMaster {
 			return status_adder(plainText, TokenStatus.CREATED.value());
 		case ACCEPTED:
 			return status_adder(plainText, TokenStatus.ACCEPTED.value());
-		case NOT_AUTHORATIVE:
-			return status_adder(plainText, TokenStatus.NOT_AUTHORATIVE.value());
+		case IM_USED:
+			return status_adder(plainText, TokenStatus.IM_USED.value());
+		case UNAUTHORIZED:
+			return status_adder(plainText, TokenStatus.UNAUTHORIZED.value());
 		case NOT_ACCEPTED:
 			return status_adder(plainText, TokenStatus.NOT_ACCEPTED.value());
 		default:
