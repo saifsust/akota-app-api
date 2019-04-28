@@ -6,6 +6,10 @@ public enum DbManager {
 	private final String DB = "hungry.";
 	private String table, SQL;
 
+	public String value() {
+		return PREFIX + this.table;
+	}
+
 	public String getQuery() {
 
 		if (name().equalsIgnoreCase(USERS.toString()))
@@ -24,8 +28,8 @@ public enum DbManager {
 
 		SQL = "create table if not exists " + DB + PREFIX + this.table
 				+ "(user_id int(22) auto_increment not null primary key,";
-		SQL += "first_name varchar(100),last_name varchar(100),user_password text,user_img text,";
-		SQL += "phone_number text,registration_date date,";
+		SQL += "first_name varchar(100),last_name varchar(100),user_password text,user_img text, user_img_location text,";
+		SQL += "phone_number text,email_address varchar(500),registration_date date,";
 		SQL += "access_token text,expires int,access_date timestamp, order_ids json)";
 		return SQL;
 	}
