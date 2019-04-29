@@ -1,60 +1,50 @@
 package com.hungry.repositories;
 
-import java.sql.Timestamp;
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.persistence.Tuple;
 import javax.transaction.Transactional;
 
-import org.slf4j.LoggerFactory;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.hungry.entities.AccessToken;
 import com.hungry.entities.User;
-import com.hungry.models.Status;
-
-import ch.qos.logback.classic.Logger;
 
 @Repository
-public class UserRepository {
+public interface UserRepository extends JpaRepository<User, Integer> {
 
-	private static final Logger log = (Logger) LoggerFactory.getLogger(UserRepository.class);
-	@PersistenceContext
-	public EntityManager entityManager;
+	/**
+	 * @param phone receive a phone number and search hungry_users table to get user
+	 *              info.
+	 * @return user if find correspondanding user
+	 */
 
+	@Query(value = "SELECT * FROM hungry_users WHERE phone_number = :phone_number", nativeQuery = true)
+	public User findUserByPhoneNumber(@Param("phone_number") String phoneNumber);
+
+	/**
+	 * @return id for last insert values in hungry_users table
+	 */
+	@Query(value = "SELECT LAST_INSERT_ID()", nativeQuery = true)
+	public int lastInsertedId();
+
+	/**
+	 * @return maximum id from hungry_users table
+	 */
+	///SELECT  ifnull((select MAX(user_id) as user_id FROM hungry_users),0)
+	
+	//@Query(value = "SELECT MAX(user_id) as user_id FROM hungry_users", nativeQuery = true)
+	@Query(value = "SELECT  IFNULL((SELECT MAX(user_id) as user_id FROM hungry_users),0)", nativeQuery = true)
+	public int findMaxUserId();
+
+	/**
+	 * update or insert user profile picture 
+	 * @param imgUrl is the image link
+	 * @param userId is the user id
+	 */
 	@Transactional
-	public void persist(User user) throws Exception {
-		entityManager.persist(user);
-	}
-
-	public AccessToken findHungryUserByPhone(String phone) throws Exception {
-		AccessToken token = null;
-		String SQL = "SELECT ";
-		SQL += "user_id,user_password,access_token,expires,access_date";
-		SQL += " FROM ";
-		SQL += "hungry_users ";
-		SQL += " WHERE phone_number='";
-		SQL += phone;
-		SQL += "'";
-		Tuple result = (Tuple) entityManager.createNativeQuery(SQL, Tuple.class).getSingleResult();
-
-		if (result != null) {
-			String accessToken = (String) result.get("access_token");
-			String expires = (String) result.get("expires");
-			Timestamp accessDate = (Timestamp) result.get("access_date");
-			int userId = (int) result.get("user_id");
-			
-			System.out.println(userId);
-			int expire = 0;
-			if (expires != null)
-				expire = Integer.parseInt(expires);
-			token = new AccessToken(userId, accessToken, expire, accessDate);
-		}
-
-		return token;
-	}
+	@Modifying
+	@Query(value = "UPDATE hungry_users SET hungry_users.user_img = :img WHERE hungry_users.user_id= :id", nativeQuery = true)
+	public void updateUserImage(@Param("img") String imgUrl, @Param("id") int userId);
 
 }
