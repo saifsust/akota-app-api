@@ -50,7 +50,7 @@ public class ImageProcessor {
 
 				stream.flush();
 			}
-			name = URLEncoder.encode(name, StandardCharsets.UTF_8.toString());
+			//name = URLEncoder.encode(name, StandardCharsets.UTF_8.toString());
 
 			Map<String, String> mapper = new HashMap<String, String>();
 			mapper.put("url", getBaseURL(httpServletRequest) + "/" + name);
