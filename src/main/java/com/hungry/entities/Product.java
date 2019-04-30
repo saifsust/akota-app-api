@@ -2,90 +2,102 @@ package com.hungry.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.aspectj.lang.annotation.RequiredTypes;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 @Entity
-@Table(name="hungry_products")
+@Table(name = "hungry_products")
 public class Product {
 
+	// default properties
 	@Id
-	@Column(name="product_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "product_id")
 	private int productId;
-	@Column(name="product_name")
+	@Column(name = "product_name")
 	private String name;
-	@Column(name="product_img")
-	private String img;
-	@Column(name="price")
+	@Column(name = "product_imgs")
+	private String productImgs;
+	@Column(name = "product_local_imgs")
+	private String productLocalImgs;
+	@Column(name = "product_detail")
+	private String detail;
+	@Column(name = "price")
 	private double price;
-	@Column(name="discount")
+	@Column(name = "product_type")
+	private String productType;
+
+	// discount properties
+	@Column(name = "discount")
 	private double discount;
-	@Column(name="rating")
+	@Column(name = "discounted_sold_price")
+	private double discountedSoldPrice;
+	@Column(name = "discounted_sold_peices")
+	private int discountedSoldPeices;
+	@Column(name = "buyers_in_discount")
+	private String buyersInDiscount;
+
+	// rating properties
+	@Column(name = "rating")
 	private double rating;
-	@Column(name="total_raters")
+	@Column(name = "total_raters")
 	private int totalRaters;
-	@Transient
-	private JSONArray raters;
-	
-	@Column(name="total_reviewers")
+	@Column(name = "raters")
+	private String raters;
+
+	// reviewer properties
+	@Column(name = "total_reviewers")
 	private int totalReviewers;
-	@Transient
-	private JSONArray reviewers;
-	@Column(name="discounted_sold_peices")
-	private int discountSalesPeices;
-	@Transient
-	private JSONArray buyerInDiscount;
-	@Column(name="total_sold_peices")
+	@Column(name = "reviewers_ids")
+	private String reviewers;
+
+	// sales properties
+	@Column(name = "total_sold_price")
+	private double totalSoldPrices;
+	@Column(name = "total_sold_peices")
 	private int totalSales;
-	@Column(name="launch")
+
+	// order properties
+	@Column(name = "order_ids")
+	private String orderIds;
+	@Column(name = "total_orders")
+	private int totalOrders;
+
+	//launch properties
+	@Column(name = "launch")
 	private String launch;
-	@Transient
-	private JSONArray orderIds;
-	@Transient
-	private JSONObject productTypes;
-	
-	
 	
 	
 	public Product() {
 		super();
 	}
+	
+	
 
-
-	public Product(String name, String img, double price, JSONObject productTypes) {
+	public Product(String name, double price, String productType) {
 		super();
 		this.name = name;
-		this.img = img;
 		this.price = price;
-		this.productTypes = productTypes;
+		this.productType = productType;
 	}
 
 
-	public Product(int productId, String name, double price, double discount, double rating, int totalRaters,
-			JSONArray raters, int totalReviewers, JSONArray reviewers, int discountSalesPeices,
-			JSONArray buyerInDiscount, int totalSales, String launch, JSONArray orderIds, JSONObject productTypes) {
-		super();
-		this.productId = productId;
-		this.name = name;
-		this.price = price;
-		this.discount = discount;
-		this.rating = rating;
-		this.totalRaters = totalRaters;
-		this.raters = raters;
-		this.totalReviewers = totalReviewers;
-		this.reviewers = reviewers;
-		this.discountSalesPeices = discountSalesPeices;
-		this.buyerInDiscount = buyerInDiscount;
-		this.totalSales = totalSales;
-		this.launch = launch;
-		this.orderIds = orderIds;
-		this.productTypes = productTypes;
-	}
 
+	public Product(String name, String productImgs, String detail, double price, String productType) {
+		super();
+		this.name = name;
+		this.productImgs = productImgs;
+		this.detail = detail;
+		this.price = price;
+		this.productType = productType;
+	}
 
 
 
@@ -93,230 +105,183 @@ public class Product {
 		return productId;
 	}
 
-
-
-
 	public void setProductId(int productId) {
 		this.productId = productId;
 	}
-
-
-
-
-	public String getImg() {
-		return img;
-	}
-
-
-	public void setImg(String img) {
-		this.img = img;
-	}
-
 
 	public String getName() {
 		return name;
 	}
 
-
-
-
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	public String getProductImgs() {
+		return productImgs;
+	}
 
+	public void setProductImgs(String productImgs) {
+		this.productImgs = productImgs;
+	}
 
+	public String getProductLocalImgs() {
+		return productLocalImgs;
+	}
+
+	public void setProductLocalImgs(String productLocalImgs) {
+		this.productLocalImgs = productLocalImgs;
+	}
+
+	public String getDetail() {
+		return detail;
+	}
+
+	public void setDetail(String detail) {
+		this.detail = detail;
+	}
 
 	public double getPrice() {
 		return price;
 	}
 
-
-
-
 	public void setPrice(double price) {
 		this.price = price;
 	}
 
+	public String getProductType() {
+		return productType;
+	}
 
-
+	public void setProductType(String productType) {
+		this.productType = productType;
+	}
 
 	public double getDiscount() {
 		return discount;
 	}
 
-
-
-
 	public void setDiscount(double discount) {
 		this.discount = discount;
 	}
 
+	public double getDiscountedSoldPrice() {
+		return discountedSoldPrice;
+	}
 
+	public void setDiscountedSoldPrice(double discountedSoldPrice) {
+		this.discountedSoldPrice = discountedSoldPrice;
+	}
 
+	public int getDiscountedSoldPeices() {
+		return discountedSoldPeices;
+	}
+
+	public void setDiscountedSoldPeices(int discountedSoldPeices) {
+		this.discountedSoldPeices = discountedSoldPeices;
+	}
+
+	public String getBuyersInDiscount() {
+		return buyersInDiscount;
+	}
+
+	public void setBuyersInDiscount(String buyersInDiscount) {
+		this.buyersInDiscount = buyersInDiscount;
+	}
 
 	public double getRating() {
 		return rating;
 	}
 
-
-
-
 	public void setRating(double rating) {
 		this.rating = rating;
 	}
-
-
-
 
 	public int getTotalRaters() {
 		return totalRaters;
 	}
 
-
-
-
 	public void setTotalRaters(int totalRaters) {
 		this.totalRaters = totalRaters;
 	}
 
-
-
-
-	public JSONArray getRaters() {
+	public String getRaters() {
 		return raters;
 	}
 
-
-
-
-	public void setRaters(JSONArray raters) {
+	public void setRaters(String raters) {
 		this.raters = raters;
 	}
-
-
-
 
 	public int getTotalReviewers() {
 		return totalReviewers;
 	}
 
-
-
-
 	public void setTotalReviewers(int totalReviewers) {
 		this.totalReviewers = totalReviewers;
 	}
 
-
-
-
-	public JSONArray getReviewers() {
+	public String getReviewers() {
 		return reviewers;
 	}
 
-
-
-
-	public void setReviewers(JSONArray reviewers) {
+	public void setReviewers(String reviewers) {
 		this.reviewers = reviewers;
 	}
 
-
-
-
-	public int getDiscountSalesPeices() {
-		return discountSalesPeices;
+	public double getTotalSoldPrices() {
+		return totalSoldPrices;
 	}
 
-
-
-
-	public void setDiscountSalesPeices(int discountSalesPeices) {
-		this.discountSalesPeices = discountSalesPeices;
+	public void setTotalSoldPrices(double totalSoldPrices) {
+		this.totalSoldPrices = totalSoldPrices;
 	}
-
-
-
-
-	public JSONArray getBuyerInDiscount() {
-		return buyerInDiscount;
-	}
-
-
-
-
-	public void setBuyerInDiscount(JSONArray buyerInDiscount) {
-		this.buyerInDiscount = buyerInDiscount;
-	}
-
-
-
 
 	public int getTotalSales() {
 		return totalSales;
 	}
 
-
-
-
 	public void setTotalSales(int totalSales) {
 		this.totalSales = totalSales;
 	}
 
+	public String getOrderIds() {
+		return orderIds;
+	}
 
+	public void setOrderIds(String orderIds) {
+		this.orderIds = orderIds;
+	}
 
+	public int getTotalOrders() {
+		return totalOrders;
+	}
+
+	public void setTotalOrders(int totalOrders) {
+		this.totalOrders = totalOrders;
+	}
 
 	public String getLaunch() {
 		return launch;
 	}
 
-
-
-
 	public void setLaunch(String launch) {
 		this.launch = launch;
 	}
 
-
-
-
-	public JSONArray getOrderIds() {
-		return orderIds;
-	}
-
-
-
-
-	public void setOrderIds(JSONArray orderIds) {
-		this.orderIds = orderIds;
-	}
-
-
-
-
-	public JSONObject getProductTypes() {
-		return productTypes;
-	}
-
-
-
-
-	public void setProductTypes(JSONObject productTypes) {
-		this.productTypes = productTypes;
-	}
-
-
 	@Override
 	public String toString() {
-		return "Product [productId=" + productId + ", name=" + name + ", img=" + img + ", price=" + price
-				+ ", discount=" + discount + ", rating=" + rating + ", totalRaters=" + totalRaters + ", raters="
-				+ raters + ", totalReviewers=" + totalReviewers + ", reviewers=" + reviewers + ", discountSalesPeices="
-				+ discountSalesPeices + ", buyerInDiscount=" + buyerInDiscount + ", totalSales=" + totalSales
-				+ ", launch=" + launch + ", orderIds=" + orderIds + ", productTypes=" + productTypes + "]";
+		return "Product [productId=" + productId + ", name=" + name + ", productImgs=" + productImgs
+				+ ", productLocalImgs=" + productLocalImgs + ", detail=" + detail + ", price=" + price
+				+ ", productType=" + productType + ", discount=" + discount + ", discountedSoldPrice="
+				+ discountedSoldPrice + ", discountedSoldPeices=" + discountedSoldPeices + ", buyersInDiscount="
+				+ buyersInDiscount + ", rating=" + rating + ", totalRaters=" + totalRaters + ", raters=" + raters
+				+ ", totalReviewers=" + totalReviewers + ", reviewers=" + reviewers + ", totalSoldPrices="
+				+ totalSoldPrices + ", totalSales=" + totalSales + ", orderIds=" + orderIds + ", totalOrders="
+				+ totalOrders + ", launch=" + launch + "]";
 	}
 
-
-
-
+	
+	
+	
 }
