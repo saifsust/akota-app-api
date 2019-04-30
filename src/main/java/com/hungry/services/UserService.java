@@ -2,6 +2,7 @@ package com.hungry.services;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.Map;
 
 import javax.transaction.Transactional;
 
@@ -9,12 +10,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.hungry.entities.AccessToken;
 import com.hungry.entities.User;
+import com.hungry.models.Profile;
 import com.hungry.repositories.Debugger;
 import com.hungry.repositories.UserRepository;
 import com.hungry.services.util.CryptoMaster;
@@ -50,52 +51,26 @@ public class UserService {
 	private AccessToken accessToken;
 
 	@Transactional
-	public ResponseEntity<AccessToken> debug() {
-
-		service.execution();
-		/*
-		 * List<User> users = debugger.findAll();
-		 * 
-		 * for (User user : users) { System.out.println(user); }
-		 */
-		/*
-		 * userRepository.updateUserImage("liton", 1);
-		 * System.out.println(debugger.findUserByPhoneNumber("01521515170"));
-		 * 
-		 * System.out.println(debugger.getLastInsertId());
-		 * 
-		 * Date date = new Date(); long time = date.getTime(); Timestamp ts = new
-		 * Timestamp(time); accessToken = new
-		 * AccessToken(securityMaster.token(TokenStatus.CREATED, 1, Type.USER),
-		 * MAX_EXPIRES, ts);
-		 */
-		// return new ResponseEntity<AccessToken>(accessToken, HttpStatus.OK);
-
-		return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(accessToken);
-	}
-
-	@Transactional
 	public ResponseEntity<AccessToken> register(User user) {
 
-		
 		try {
-			LOG.debug( "register : user "+user.toString());
-			
-			//System.out.println(user);
-			
-			User result = userRepository.findUserByPhoneNumber(user.getPhone());			
+			LOG.debug("register : user " + user.toString());
+
+			// System.out.println(user);
+
+			User result = userRepository.findUserByPhoneNumber(user.getPhone());
 			Date date = new Date();
 			long time = date.getTime();
 			Timestamp ts = new Timestamp(time);
 
 			accessToken = null;
-			
+
 			if (result != null || user.getPassword().equals(null) || user.getPassword().equals("")) {
-				LOG.debug( "register : findUserByPhoneNumber "+result.toString());
+				LOG.debug("register : findUserByPhoneNumber " + result.toString());
 				return new ResponseEntity<AccessToken>(accessToken, HttpStatus.NOT_ACCEPTABLE);
 			}
-				
-			//System.out.println(user);
+
+			// System.out.println(user);
 
 			/**
 			 * 
@@ -104,21 +79,22 @@ public class UserService {
 
 			user.setPassword(cryptoMaster.encrypt(user.getPassword()));
 			user.setRegistrationDate(ts.toString());
-			
+
 			int maxUserId = userRepository.findMaxUserId();
 			++maxUserId;
-			
-			LOG.debug( "register  maxUserId : "+maxUserId);
-			accessToken = new AccessToken(securityMaster.token(TokenStatus.CREATED, maxUserId, Type.USER), MAX_EXPIRES, ts);
+
+			LOG.debug("register  maxUserId : " + maxUserId);
+			accessToken = new AccessToken(securityMaster.token(TokenStatus.CREATED, maxUserId, Type.USER), MAX_EXPIRES,
+					ts);
 			user.setAccessToken(accessToken);
 			userRepository.save(user);
-			
-		}catch (Exception e) {
-			LOG.debug( "register  : "+e.getMessage());
+
+		} catch (Exception e) {
+			LOG.debug("register  : " + e.getMessage());
 			return new ResponseEntity<AccessToken>(accessToken, HttpStatus.NOT_ACCEPTABLE);
 			// TODO: handle exception
 		}
-		
+
 		return new ResponseEntity<AccessToken>(accessToken, HttpStatus.CREATED);
 	}
 
@@ -148,7 +124,26 @@ public class UserService {
 		// Timestamp timestamp = new Timestamp(time);
 		accessToken = new AccessToken(token, expires, timestamp);
 
-		return new ResponseEntity<AccessToken>(accessToken, HttpStatus.OK);
+		return new ResponseEntity<AccessToken>(accessToken, HttpStatus.FOUND);
+	}
+
+	public ResponseEntity<Profile> profile(String token) {
+
+		Profile profile = null;
+		try {
+			Map<String, Object> info = securityMaster.decrypt(token);
+			long userId = (long) info.get("user_id");
+			User user = null;
+			user = userRepository.findUserByUserId((int) userId);
+			if (user == null)
+				return new ResponseEntity<Profile>(profile, HttpStatus.NOT_FOUND);
+			profile = new Profile(user);
+			return new ResponseEntity<Profile>(profile, HttpStatus.OK);
+
+		} catch (Exception e) {
+			LOG.error("profile : " + e.getMessage());
+			return new ResponseEntity<Profile>(profile, HttpStatus.NOT_FOUND);
+		}
 	}
 
 }
