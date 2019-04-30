@@ -5,20 +5,21 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.json.JSONArray;
-import org.springframework.beans.factory.annotation.Required;
 
-import com.hungry.models.Status;
 
 @Entity
 @Table(name = "hungry_users")
 public class User implements Serializable {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "user_id")
 	private int userId;
 	@Column(name = "first_name")
@@ -27,14 +28,14 @@ public class User implements Serializable {
 	private String lastName;
 	@Column(name = "phone_number")
 	private String phone;
-	@Column(name="email_address")
+	@Column(name = "email_address")
 	private String email;
 	@Column(name = "user_img")
 	private String userImg;
-	
+
 	@Column(name = "user_img_location")
 	private String userImgLocation;
-	
+
 	@Column(name = "registration_date")
 	private String registrationDate;
 	@Column(name = "user_password")
@@ -47,7 +48,7 @@ public class User implements Serializable {
 
 	public User() {
 		super();
-	}	
+	}
 
 	public User(String firstName, String lastName, String phone, String password) {
 		super();
@@ -56,8 +57,6 @@ public class User implements Serializable {
 		this.phone = phone;
 		this.password = password;
 	}
-	
-	
 
 	public User(String firstName, String lastName, String phone, String userImg, String userImgLocation,
 			String registrationDate, String password) {
@@ -131,8 +130,6 @@ public class User implements Serializable {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-	
-	
 
 	public String getEmail() {
 		return email;
@@ -149,8 +146,6 @@ public class User implements Serializable {
 	public void setUserImg(String userImg) {
 		this.userImg = userImg;
 	}
-	
-	
 
 	public String getUserImgLocation() {
 		return userImgLocation;
@@ -175,7 +170,5 @@ public class User implements Serializable {
 				+ ", registrationDate=" + registrationDate + ", password=" + password + ", OrdersId=" + OrdersId
 				+ ", accessToken=" + accessToken + "]";
 	}
-
-	
 
 }
