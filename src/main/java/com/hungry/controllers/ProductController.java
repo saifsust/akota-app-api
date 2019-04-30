@@ -13,10 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hungry.entities.Product;
 import com.hungry.services.ProductService;
-import com.hungry.services.SecurityMaster;
-import com.hungry.util.Contents;
-import com.hungry.util.TokenStatus;
-import com.hungry.util.Type;
+import com.hungry.services.util.Contents;
+import com.hungry.services.util.SecurityMaster;
+import com.hungry.services.util.TokenStatus;
 
 @RestController
 public class ProductController {
@@ -35,7 +34,7 @@ public class ProductController {
 			log.info(newProduct.toString());
 			productService.persist(newProduct);
 
-			String token = utilService.token(TokenStatus.ACCEPTED, 123, Type.USER);
+			String token=null ; //utilService.token(TokenStatus.ACCEPTED, 123, Type.USER);
 
 			System.out.println(token);
 			log.error(token);

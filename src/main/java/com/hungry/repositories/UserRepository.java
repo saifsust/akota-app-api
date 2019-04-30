@@ -9,7 +9,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.hungry.entities.User;
-import com.hungry.models.Profile;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
