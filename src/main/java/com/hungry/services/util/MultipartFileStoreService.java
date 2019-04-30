@@ -34,8 +34,7 @@ public class MultipartFileStoreService {
 	private Map<String, Object> decrytion;
 
 	@Transactional
-	public ResponseEntity<Void> store(String token, MultipartFile mpf, HttpServletRequest httpServletRequest) {
-
+	public ResponseEntity<Void> store(String token, MultipartFile mpf, HttpServletRequest httpServletRequest) {				
 		String url = null, path = null;
 		try {
 			LOG.debug("store : token : " + token + " | mpf : " + mpf.getContentType());
@@ -45,11 +44,13 @@ public class MultipartFileStoreService {
 			decrytion = securityMaster.decrypt(token);
 			long userId = (long) decrytion.get("user_id");
 			LOG.debug("store : url : " + url + " user_id : " + userId);
-			userRepository.updateUserImage(url, (int) userId);
+			String local=userRepository.findImageLocalAddresss((int)userId);
+			imageProcessor.remove(local);			
+			userRepository.updateUserImage(url,path,(int) userId);
 		} catch (Exception e) {
 			LOG.error("store : " + e.getMessage());
 			imageProcessor.remove(path);
-			return new ResponseEntity<Void>(HttpStatus.NOT_ACCEPTABLE);
+			return new ResponseEntity<Void>(HttpStatus.NOT_MODIFIED);
 		}
 		return ResponseEntity.accepted().body(null);
 	}
