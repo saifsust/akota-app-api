@@ -1,21 +1,36 @@
 package com.hungry.entities;
 
-import java.beans.Transient;
+import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Embeddable;
-import javax.persistence.Tuple;
-import javax.transaction.Transactional;
+
+import org.json.JSONArray;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.hungry.entities.converters.JsonArrayConverter;
 
 @Embeddable
-public class ProductSummary {
+public class ProductSummary implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Column(name = "product_name")
 	private String name;
-	@Column(name = "product_imgs")
-	private String productImgs;
-	@Column(name = "product_local_imgs")
-	private String productLocalImgs;
+
+	@Column(name = "product_imgs", columnDefinition = "json")
+	@Convert(converter = JsonArrayConverter.class)
+	private List<String> productImgs;
+	@Column(name = "product_local_imgs", columnDefinition = "json")
+	@JsonIgnore
+	@Convert(converter = JsonArrayConverter.class)
+	private List<String> productLocalImgs;
 	@Column(name = "product_detail")
+	@JsonIgnore
 	private String detail;
 	@Column(name = "price")
 	private double price;
@@ -26,15 +41,7 @@ public class ProductSummary {
 		super();
 	}
 
-	public ProductSummary(String name, String productImgs, double price, String productType) {
-		super();
-		this.name = name;
-		this.productImgs = productImgs;
-		this.price = price;
-		this.productType = productType;
-	}
-
-	public ProductSummary(String name, String productImgs, String detail, double price, String productType) {
+	public ProductSummary(String name, List<String> productImgs, String detail, double price, String productType) {
 		super();
 		this.name = name;
 		this.productImgs = productImgs;
@@ -43,10 +50,12 @@ public class ProductSummary {
 		this.productType = productType;
 	}
 
-	@Transient
-	public static ProductSummary converter(Tuple productSummary) {
-		return new ProductSummary("" + productSummary.get("product_name"), "" + productSummary.get("product_imgs"),
-				(double) productSummary.get("price"), "" + productSummary.get("product_type"));
+	public ProductSummary(String name, List<String> productImgs, double price, String productType) {
+		super();
+		this.name = name;
+		this.productImgs = productImgs;
+		this.price = price;
+		this.productType = productType;
 	}
 
 	public String getName() {
@@ -57,19 +66,19 @@ public class ProductSummary {
 		this.name = name;
 	}
 
-	public String getProductImgs() {
+	public List<String> getProductImgs() {
 		return productImgs;
 	}
 
-	public void setProductImgs(String productImgs) {
+	public void setProductImgs(List<String> productImgs) {
 		this.productImgs = productImgs;
 	}
 
-	public String getProductLocalImgs() {
+	public List<String> getProductLocalImgs() {
 		return productLocalImgs;
 	}
 
-	public void setProductLocalImgs(String productLocalImgs) {
+	public void setProductLocalImgs(List<String> productLocalImgs) {
 		this.productLocalImgs = productLocalImgs;
 	}
 
@@ -95,6 +104,10 @@ public class ProductSummary {
 
 	public void setProductType(String productType) {
 		this.productType = productType;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
 	@Override
