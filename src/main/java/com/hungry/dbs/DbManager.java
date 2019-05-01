@@ -47,11 +47,11 @@ public enum DbManager {
 	private String products() {
 		SQL = "create table if not exists " + DB + PREFIX + this.table
 				+ "(product_id int(22) auto_increment not null primary key,";
-		SQL += "product_name varchar(300),product_types json,product_img text,";
-		SQL += "price double,rating double,total_raters int,raters json,";
-		SQL += "discount double,discounted_sold_price double,discounted_sold_peices int,";
-		SQL += "total_sold_price double,total_sold_peices int,total_orders int,";
-		SQL += "order_ids json,total_reviewers int ,reviewers_ids json,";
+		SQL += "product_name varchar(300),product_type varchar(50),product_imgs json,product_local_imgs json,product_detail json,";
+		SQL += "price double DEFAULT 0 ,rating double DEFAULT 0,total_raters int DEFAULT 0,raters json,";
+		SQL += "discount double DEFAULT 0,discounted_sold_price double DEFAULT 0,discounted_sold_peices int DEFAULT 0,buyers_in_discount json,";
+		SQL += "total_sold_price double DEFAULT 0,total_sold_peices int DEFAULT 0,";
+		SQL += "buyers json,total_reviewers int DEFAULT 0,reviewers_ids json, ";
 		SQL += "launch timestamp)";
 		return SQL;
 
