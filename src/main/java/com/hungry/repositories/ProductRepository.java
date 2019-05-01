@@ -14,6 +14,9 @@ import com.hungry.entities.Product;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Integer> {
 
+	@Query(value = "SELECT product_name,product_imgs,product_local_imgs,product_detail,price,product_type FROM hungry_products WHERE product_name = :product_name", nativeQuery = true)
+	public List<Tuple> findProductSummaryByName(@Param("product_name") String name);
+
 	@Query(value = "SELECT product_name,product_imgs,product_local_imgs,product_detail,price,product_type FROM hungry_products WHERE product_id = :product_id", nativeQuery = true)
 	public Tuple findProductSummaryById(@Param("product_id") int productId);
 
