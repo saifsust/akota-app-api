@@ -15,7 +15,7 @@ import ch.qos.logback.classic.Logger;
 @Transactional
 public class DbManagerRepository {
 
-	private static final Logger log = (Logger) LoggerFactory.getLogger(UserRepository.class);
+	private static final Logger log = (Logger) LoggerFactory.getLogger(DbManagerRepository.class);
 
 	@PersistenceContext
 	private EntityManager em;
