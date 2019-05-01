@@ -1,58 +1,38 @@
 package com.hungry.controllers;
 
-import java.util.Map;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.hungry.entities.Product;
+import com.hungry.repositories.ProductRepository;
+import com.hungry.services.DbManagerService;
 import com.hungry.services.ProductService;
 import com.hungry.services.util.Contents;
-import com.hungry.services.util.SecurityMaster;
-import com.hungry.services.util.TokenStatus;
 
-@RestController
+@Controller
+@RequestMapping(value = "/product")
 public class ProductController {
 
 	private static final Logger log = (Logger) LoggerFactory.getLogger(ProductController.class);
 
 	@Autowired
 	private ProductService productService;
+
 	@Autowired
-	private SecurityMaster utilService;
+	private DbManagerService dbManagerService;
 
-	@PostMapping(value = Contents.NEW_PRODUCT, consumes = { Contents.JSON })
-	public ResponseEntity<Void> upload_new_product(@RequestBody Product newProduct) {
-
-		try {
-			log.info(newProduct.toString());
-			productService.persist(newProduct);
-
-			String token=null ; //utilService.token(TokenStatus.ACCEPTED, 123, Type.USER);
-
-			System.out.println(token);
-			log.error(token);
-
-			Map<String, Object> map = utilService.decrypt(token);
-			
-			TokenStatus status = (TokenStatus) map.get("token_status");
-			
-			System.out.println(status);
-			
-			System.out.println(map.get("user_id"));
-			System.out.println(map.get("user_type"));
-			System.out.println(map.get("token_status"));
-			return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
-		} catch (Exception e) {
-			log.error(e.getMessage());
-			return new ResponseEntity<Void>(HttpStatus.NOT_ACCEPTABLE);
-		}
+	@GetMapping(value = Contents.PRODUCTS, produces = Contents.JSON)
+	public ResponseEntity<List<Product>> upload_new_product() {
+		 //dbManagerService.execution();
+		return productService.all();
 	}
 
 }
