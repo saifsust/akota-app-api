@@ -2,51 +2,70 @@ package com.hungry.services;
 
 import java.util.List;
 
-import javax.persistence.Tuple;
-
 import org.json.JSONArray;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.hungry.entities.Discount;
 import com.hungry.entities.Product;
 import com.hungry.entities.ProductSummary;
-import com.hungry.entities.Rating;
-import com.hungry.entities.Reviewer;
-import com.hungry.entities.Sale;
 import com.hungry.repositories.ProductRepository;
 
 @Service
 public class ProductService {
 
+	private static final Logger LOG = (Logger) LoggerFactory.getLogger(ProductService.class);
+
 	@Autowired
 	private ProductRepository productRepository;
 
-	public ResponseEntity<List<Product>> all() {
+	private static final double RATING = 0.0;
 
-		ProductSummary summary = new ProductSummary("MyPro1", new JSONArray("[{ imgs: kadkahdkahd }]").toString(),
-				120.5, "SHABAN");
-
-		Product pro = new Product(summary);
-		productRepository.save(pro);
-		Discount dis = new Discount();
-		// dis.setBuyersInDiscount("");
-
-		List<Product> product = productRepository.findProductsByName("MyPro1");
-
-		Tuple result = productRepository.findDiscountProductById(2);
-		System.out.println(Discount.converter(result));
-
-		System.out.println(Rating.converter(productRepository.findRatingProductById(1)));
-		System.out.println(Reviewer.converter(productRepository.findReviewerProductById(1)));
-
-		System.out.println(Sale.converter(productRepository.findSaleProductById(1)));
-
-		System.out.println(ProductSummary.converter(productRepository.findProductSummaryById(1)));
-
-		return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(product);
+	public ResponseEntity<List<Product>> retrieveByName(String name) {
+		return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON)
+				.body(productRepository.findProductsByName(name));
 	}
+
+	public ResponseEntity<List<Product>> retrieveByType(String type) {
+		return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON)
+				.body(productRepository.findProductsByType(type));
+	}
+
+	public ResponseEntity<List<Product>> retrieveByBestName(String name) {
+		return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON)
+				.body(productRepository.findProductsByRatingAndName(name, RATING));
+	}
+
+	public ResponseEntity<List<Product>> retrieveByBestType(String type) {
+		return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON)
+				.body(productRepository.findProductsByRatingAndType(type, RATING));
+	}
+
+	/*
+	 * public ResponseEntity<List<ProductSummary>> retrieveSummariesByName(String
+	 * name) { return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON)
+	 * .body(ProductSummary.converter(productRepository.findProductSummaryByName(
+	 * name))); }
+	 */
+
+/*	public ResponseEntity<Void> upload(ProductSummary summary) {
+		LOG.debug("upload" + summary);
+		if (summary == null)
+			return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+		if (summary.getName() == null || summary.getProductType() == null || summary.getPrice() == 0
+				|| summary.getProductImgs() == null)
+			return new ResponseEntity<Void>(HttpStatus.NOT_ACCEPTABLE);
+		summary.setDetail(new JSONArray(summary.getDetail()).toString());
+		
+		System.out.println(summary);
+		
+		//productRepository.save(new Product(summary));
+		LOG.debug("upload : successfully upload");
+		return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
+	}*/
 
 }
