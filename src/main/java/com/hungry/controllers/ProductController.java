@@ -44,11 +44,6 @@ public class ProductController {
 		return productService.upload(productSummary);
 	}
 
-	/**
-	 * all get request
-	 * 
-	 */
-
 	@GetMapping(value = "/retreive/name/{name}", produces = Contents.JSON)
 	public @ResponseBody ResponseEntity<List<Product>> retrieveByName(@PathVariable("name") String name) {
 
@@ -70,12 +65,9 @@ public class ProductController {
 		return productService.retrieveByBestType(type);
 	}
 
-	/*
-	 * @GetMapping(value = Contents.SUMMARIES_NAME_RETREIVER, produces =
-	 * Contents.JSON) public @ResponseBody ResponseEntity<List<ProductSummary>>
-	 * retreiveSummariesByName(
-	 * 
-	 * @PathVariable("name") String name) { return
-	 * productService.retrieveSummariesByName(name); }
-	 */
+	@GetMapping(value = "retreive/{productId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody ResponseEntity<Product> productById(@PathVariable("productId") int productId) {
+		return productService.productById(productId);
+	}
+
 }

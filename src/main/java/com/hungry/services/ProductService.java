@@ -27,9 +27,14 @@ public class ProductService {
 
 	private static final double RATING = 0.0;
 
+	public ResponseEntity<Product> productById(int productId) {
+		return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON)
+				.body(productRepository.findProductById(productId));
+	}
+
 	public ResponseEntity<List<Product>> retrieveByName(String name) {
 
-		dbManagerService.execution();
+		// dbManagerService.execution();
 		return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON)
 				.body(productRepository.findProductsByName(name));
 	}
@@ -49,12 +54,6 @@ public class ProductService {
 				.body(productRepository.findProductsByRatingAndType(type, RATING));
 	}
 
-	/*
-	 * public ResponseEntity<List<ProductSummary>> retrieveSummariesByName(String
-	 * name) { return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON)
-	 * .body(ProductSummary.converter(productRepository.findProductSummaryByName(
-	 * name))); }
-	 */
 
 	public ResponseEntity<Void> upload(ProductSummary summary) {
 		LOG.debug("upload" + summary);
@@ -63,9 +62,9 @@ public class ProductService {
 		if (summary.getName() == null || summary.getProductType() == null || summary.getPrice() == 0)
 			return new ResponseEntity<Void>(HttpStatus.NOT_ACCEPTABLE);
 
-		//System.out.println(summary);
+		// System.out.println(summary);
 
-	   productRepository.save(new Product(summary));
+		productRepository.save(new Product(summary));
 		LOG.debug("upload : successfully upload");
 		return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
 	}
