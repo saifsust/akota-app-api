@@ -83,7 +83,6 @@ public class ProductController {
 	@PatchMapping(value = "/sale/{productId}/{peices}")
 	public @ResponseBody ResponseEntity<Void> sale(@RequestParam("token") String token,
 			@PathVariable("productId") int productId, @PathVariable("peices") int peices) {
-		saleRepository.update(10.0, 1, 1);
 		LOG.debug("sale : productId-> " + productId + "  token->  " + token);
 		return saleService.sale(token, productId, peices);
 	}

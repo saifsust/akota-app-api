@@ -6,12 +6,14 @@ import javax.transaction.Transactional;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.hungry.repositories.SaleRepository;
 import com.hungry.services.util.SecurityMaster;
 
@@ -46,14 +48,33 @@ public class SaleService {
 			if (buyers == null)
 				buyers = "[{ \"user_id\" : " + userId + ",\"orders\":[" + 1 + "]" + " }]";
 
-			buyers = new JSONArray(buyers).toString();
+			else {
+				JSONArray list = new JSONArray(buyers);
+				if (!list.isEmpty()) {
+					for (int i = 0; i < list.length(); ++i) {
+						JSONObject object = list.getJSONObject(i);
+						int id = object.getInt("user_id");
+						if (id == userId) {
+							JSONArray orders = object.getJSONArray("orders");
+							// orders id put
+							orders.put(2);
+							buyers = "[{ \"user_id\" : " + userId + ",\"orders\":" + orders.toString() + " }]";
+							break;
+						}
+					}
+				}
+
+				LOG.debug("buyers : " + buyers);
+			}
+
+			// buyers = "[{ \"user_id\" : " + userId + ",\"orders\":[" + 1 + "]" + " }]";
 
 			double newSoldPrice = totalSoldPrice + peiecs * price;
-			int newSoldPeices = totalSoldPeices = peiecs;
+			int newSoldPeices = totalSoldPeices + peiecs;
 
 			LOG.info("sale :  newSoldPrice : " + newSoldPrice + " newSoldPeices : " + newSoldPeices
 					+ " totalSoldPrice : " + totalSoldPrice + " totalSoldPeices : " + totalSoldPeices);
-			saleRepository.update(newSoldPrice, newSoldPeices, productId);
+			saleRepository.update(newSoldPrice, newSoldPeices, buyers, productId);
 
 			return ResponseEntity.accepted().body(null);
 

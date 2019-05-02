@@ -15,9 +15,9 @@ public interface SaleRepository extends JpaRepository<Product, Integer> {
 
 	@Transactional
 	@Modifying
-	@Query(value = "UPDATE hungry_products SET hungry_products.total_sold_price= :new_sold_price, hungry_products.total_sold_peices= :new_sold_peices WHERE hungry_products.product_id= :product_id", nativeQuery = true)
+	@Query(value = "UPDATE hungry_products SET total_sold_price= :new_sold_price, total_sold_peices= :new_sold_peices,buyers=:buyers WHERE product_id=:product_id", nativeQuery = true)
 	public void update(@Param("new_sold_price") double newSoldPrice, @Param("new_sold_peices") int newSoldPeices,
-			@Param("product_id") int productId);
+			@Param("buyers") String buyers, @Param("product_id") int productId);
 
 	@Query(value = "SELECT price FROM hungry_products WHERE product_id=:product_id", nativeQuery = true)
 	public double findProductPrice(@Param("product_id") int productId);
