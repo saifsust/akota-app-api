@@ -1,10 +1,9 @@
 package com.hungry.entities;
 
-import java.beans.Transient;
-
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.persistence.Tuple;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Embeddable
 public class Sale {
@@ -13,24 +12,18 @@ public class Sale {
 	@Column(name = "total_sold_peices")
 	private int totalSales;
 	@Column(name = "buyers")
+	@JsonIgnore
 	private String orderIds;
 
 	public Sale() {
 		super();
 	}
-	
 
 	public Sale(double totalSoldPrices, int totalSales, String orderIds) {
 		super();
 		this.totalSoldPrices = totalSoldPrices;
 		this.totalSales = totalSales;
 		this.orderIds = orderIds;
-	}
-
-	@Transient
-	public static Sale converter(Tuple sale) {
-		return new Sale((double) sale.get("total_sold_price"), (int) sale.get("total_sold_peices"),
-				"" + sale.get("buyers"));
 	}
 
 	public double getTotalSoldPrices() {

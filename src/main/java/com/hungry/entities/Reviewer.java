@@ -6,10 +6,15 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Tuple;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Embeddable
 public class Reviewer {
 	@Column(name = "total_reviewers")
 	private int totalReviewers;
+	@JsonIgnore
 	@Column(name = "reviewers_ids")
 	private String reviewers;
 

@@ -6,12 +6,15 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Tuple;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Embeddable
 public class Rating {
 	@Column(name = "rating")
 	private double rating;
 	@Column(name = "total_raters")
 	private int totalRaters;
+	@JsonIgnore
 	@Column(name = "raters")
 	private String raters;
 

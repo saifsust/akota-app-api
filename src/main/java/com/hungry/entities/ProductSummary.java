@@ -34,7 +34,6 @@ public class ProductSummary implements Serializable {
 	@Convert(converter = JsonArrayConverter.class)
 	private List<String> productLocalImgs;
 	@Column(name = "product_detail")
-	@JsonIgnore
 	private String detail;
 	@Column(name = "price")
 	private double price;

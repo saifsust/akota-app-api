@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.print.attribute.standard.Media;
+import javax.websocket.server.PathParam;
 
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -14,15 +15,19 @@ import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hungry.entities.Product;
 import com.hungry.entities.ProductSummary;
 import com.hungry.repositories.ProductRepository;
+import com.hungry.repositories.SaleRepository;
 import com.hungry.services.ProductService;
+import com.hungry.services.SaleService;
 import com.hungry.services.util.Contents;
 
 @Controller
@@ -35,7 +40,10 @@ public class ProductController {
 	private ProductService productService;
 
 	@Autowired
-	private ProductRepository productRepository;
+	private SaleService saleService;
+
+	@Autowired
+	private SaleRepository saleRepository;
 
 	@PostMapping(value = "/upload", produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<Void> upload(RequestEntity<HashMap<String, Object>> summary) {
@@ -68,6 +76,16 @@ public class ProductController {
 	@GetMapping(value = "retreive/{productId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<Product> productById(@PathVariable("productId") int productId) {
 		return productService.productById(productId);
+	}
+
+	/** Sales Controller Methods **/
+
+	@PatchMapping(value = "/sale/{productId}/{peices}")
+	public @ResponseBody ResponseEntity<Void> sale(@RequestParam("token") String token,
+			@PathVariable("productId") int productId, @PathVariable("peices") int peices) {
+		saleRepository.update(10.0, 1, 1);
+		LOG.debug("sale : productId-> " + productId + "  token->  " + token);
+		return saleService.sale(token, productId, peices);
 	}
 
 }
