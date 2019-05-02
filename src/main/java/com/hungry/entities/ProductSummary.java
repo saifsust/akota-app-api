@@ -1,5 +1,6 @@
 package com.hungry.entities;
 
+import java.beans.Transient;
 import java.io.Serializable;
 import java.util.List;
 
@@ -7,7 +8,10 @@ import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Embeddable;
 
-import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hungry.entities.converters.JsonArrayConverter;
@@ -21,8 +25,8 @@ public class ProductSummary implements Serializable {
 
 	@Column(name = "product_name")
 	private String name;
-
 	@Column(name = "product_imgs", columnDefinition = "json")
+	@JsonIgnore
 	@Convert(converter = JsonArrayConverter.class)
 	private List<String> productImgs;
 	@Column(name = "product_local_imgs", columnDefinition = "json")
@@ -41,21 +45,45 @@ public class ProductSummary implements Serializable {
 		super();
 	}
 
-	public ProductSummary(String name, List<String> productImgs, String detail, double price, String productType) {
+	public ProductSummary(String name, double price, String productType) {
 		super();
 		this.name = name;
-		this.productImgs = productImgs;
+		this.price = price;
+		this.productType = productType;
+	}
+
+	public ProductSummary(String name, String detail, double price, String productType) {
+		super();
+		this.name = name;
 		this.detail = detail;
 		this.price = price;
 		this.productType = productType;
 	}
 
-	public ProductSummary(String name, List<String> productImgs, double price, String productType) {
-		super();
-		this.name = name;
-		this.productImgs = productImgs;
-		this.price = price;
-		this.productType = productType;
+	@Transient
+	public static ProductSummary converter(JSONObject json) {
+
+		Logger LOG = (Logger) LoggerFactory.getLogger(ProductSummary.class);
+
+		try {
+
+			String name = json.getString("name");
+			String type = json.getString("productType");
+			double price = json.getDouble("price");
+			String detail = null;
+			if (json.has("detail"))
+				detail = json.getJSONObject("detail").toString();
+			return new ProductSummary(name, detail, price, type);
+
+		} catch (JSONException e) {
+
+			LOG.error("converter : JSONException :  " + e.getMessage());
+		} catch (Exception e) {
+			// TODO: handle exception
+			LOG.error("converter : Exception :  " + e.getMessage());
+		}
+
+		return null;
 	}
 
 	public String getName() {
