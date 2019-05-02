@@ -3,10 +3,13 @@ package com.hungry.controllers;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.print.attribute.standard.Media;
+
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hungry.entities.Product;
+import com.hungry.entities.ProductSummary;
 import com.hungry.repositories.ProductRepository;
 import com.hungry.services.ProductService;
 import com.hungry.services.util.Contents;
@@ -33,26 +37,11 @@ public class ProductController {
 	@Autowired
 	private ProductRepository productRepository;
 
-	@PostMapping(value = "/upload", consumes = { Contents.JSON })
+	@PostMapping(value = "/upload", produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<Void> upload(RequestEntity<HashMap<String, Object>> summary) {
 		LOG.debug("upload : " + summary);
-
-		System.out.println(summary);
-		// System.out.println(new JSONObject(summary.get("detail").toString()));
-
-		/*
-		 * List<String> map = new ArrayList<String>();
-		 * 
-		 * map.add("SAIFUL ISLAM"); map.add("LITON"); ProductSummary s = new
-		 * ProductSummary("babu", map, 113.0, "ami");
-		 * 
-		 * s.setProductLocalImgs(map); Product pp = new Product(s);
-		 * 
-		 * productRepository.save(pp);
-		 */
-
-		return null;
-		// return productService.upload(summary);
+		ProductSummary productSummary = ProductSummary.converter(new JSONObject(summary.getBody()));
+		return productService.upload(productSummary);
 	}
 
 	/**
