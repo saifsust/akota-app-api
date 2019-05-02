@@ -22,10 +22,14 @@ public class ProductService {
 
 	@Autowired
 	private ProductRepository productRepository;
+	@Autowired
+	private DbManagerService dbManagerService;
 
 	private static final double RATING = 0.0;
 
 	public ResponseEntity<List<Product>> retrieveByName(String name) {
+
+		dbManagerService.execution();
 		return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON)
 				.body(productRepository.findProductsByName(name));
 	}
@@ -52,20 +56,18 @@ public class ProductService {
 	 * name))); }
 	 */
 
-/*	public ResponseEntity<Void> upload(ProductSummary summary) {
+	public ResponseEntity<Void> upload(ProductSummary summary) {
 		LOG.debug("upload" + summary);
 		if (summary == null)
 			return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-		if (summary.getName() == null || summary.getProductType() == null || summary.getPrice() == 0
-				|| summary.getProductImgs() == null)
+		if (summary.getName() == null || summary.getProductType() == null || summary.getPrice() == 0)
 			return new ResponseEntity<Void>(HttpStatus.NOT_ACCEPTABLE);
-		summary.setDetail(new JSONArray(summary.getDetail()).toString());
-		
-		System.out.println(summary);
-		
-		//productRepository.save(new Product(summary));
+
+		//System.out.println(summary);
+
+	   productRepository.save(new Product(summary));
 		LOG.debug("upload : successfully upload");
 		return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
-	}*/
+	}
 
 }
