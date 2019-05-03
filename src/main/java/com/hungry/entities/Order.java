@@ -2,50 +2,43 @@ package com.hungry.entities;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "hungry_orders")
 public class Order implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "order_id")
 	private long orderId;
 
-	//@Column(name = "product_id")
-	 @JoinColumn(name = "product_id", insertable = true, updatable = true)
-	//@ToMany(targetEntity = Product.class, fetch = FetchType.LAZY)
-	private Product products;
-
-	@Column(name = "user_id")
-	// @JoinColumn(name = "user_id", insertable = true, updatable = true)
-	// @ManyToMany(targetEntity = User.class, fetch = FetchType.LAZY)
-	private User users;
-	@Column(name = "ordet_times")
-	private String orderDate;
+	// @Column(name = "user_id", nullable = false)
+	@JoinColumn(name = "user_id")
+	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, targetEntity = User.class)
+	private User user;
 
 	public Order() {
 		super();
 	}
 
-	
-
-	public Order(Product products, User users) {
+	public Order(User user) {
 		super();
-		this.products = products;
-		this.users = users;
+		this.user = user;
 	}
-
-
 
 	public long getOrderId() {
 		return orderId;
@@ -55,44 +48,17 @@ public class Order implements Serializable {
 		this.orderId = orderId;
 	}
 
-	
-
-	public Product getProducts() {
-		return products;
+	public User getUser() {
+		return user;
 	}
 
-
-
-	public void setProducts(Product products) {
-		this.products = products;
-	}
-
-
-
-	public User getUsers() {
-		return users;
-	}
-
-
-
-	public void setUsers(User users) {
-		this.users = users;
-	}
-
-
-
-	public String getOrderDate() {
-		return orderDate;
-	}
-
-	public void setOrderDate(String orderDate) {
-		this.orderDate = orderDate;
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	@Override
 	public String toString() {
-		return "Order [orderId=" + orderId + ", products=" + products + ", users=" + users + ", orderDate=" + orderDate
-				+ "]";
+		return "Order [orderId=" + orderId + ", user=" + user + "]";
 	}
 
 }

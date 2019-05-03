@@ -10,7 +10,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.hungry.entities.Order;
 import com.hungry.entities.Product;
 import com.hungry.entities.ProductSummary;
 import com.hungry.repositories.OrderRepository;
@@ -27,8 +26,6 @@ public class ProductService {
 	@Autowired
 	private DbManagerService dbManagerService;
 
-	@Autowired
-	private OrderRepository orderRepository;
 
 	private static final double RATING = 0.0;
 
@@ -67,15 +64,6 @@ public class ProductService {
 			return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 		if (summary.getName() == null || summary.getProductType() == null || summary.getPrice() == 0)
 			return new ResponseEntity<Void>(HttpStatus.NOT_ACCEPTABLE);
-
-		
-	
-		/*List<Order> orders= orderRepository.findOrderByUserAndProductId();
-		for(Order order : orders) {
-			System.out.println(order);
-		}*/
-		
-		// System.out.println(summary);
 
 		productRepository.save(new Product(summary));
 		LOG.debug("upload : successfully upload");

@@ -12,6 +12,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
@@ -36,16 +37,11 @@ public class HungryApplication implements WebMvcConfigurer {
 		SpringApplication.run(HungryApplication.class, args);
 	}
 
-	@Override
-	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		registry.addResourceHandler("/**").addResourceLocations("file:/media/saif-sust/WEB_project/hungry/images/");
-	}
-
 	@Bean(name = "entityManagerFactory")
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
 		LocalContainerEntityManagerFactoryBean localContrainerEntityManager = new LocalContainerEntityManagerFactoryBean();
 		localContrainerEntityManager.setDataSource(dataSource);
-		localContrainerEntityManager.setPackagesToScan(new String[] { "com.hungry.entities"});
+		localContrainerEntityManager.setPackagesToScan(new String[] { "com.hungry.entities" });
 		JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
 		localContrainerEntityManager.setJpaVendorAdapter(vendorAdapter);
 		return localContrainerEntityManager;
@@ -61,6 +57,11 @@ public class HungryApplication implements WebMvcConfigurer {
 		JpaTransactionManager jpaTransactionManager = new JpaTransactionManager();
 		jpaTransactionManager.setEntityManagerFactory(entityManagerFactory);
 		return jpaTransactionManager;
+	}
+
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		registry.addResourceHandler("/**").addResourceLocations("file:/media/saif-sust/WEB_project/hungry/images/");
 	}
 
 }
