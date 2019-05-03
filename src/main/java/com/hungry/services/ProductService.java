@@ -10,8 +10,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.hungry.entities.Order;
 import com.hungry.entities.Product;
 import com.hungry.entities.ProductSummary;
+import com.hungry.repositories.OrderRepository;
 import com.hungry.repositories.ProductRepository;
 
 @Service
@@ -21,13 +23,18 @@ public class ProductService {
 
 	@Autowired
 	private ProductRepository productRepository;
-	
+
 	@Autowired
 	private DbManagerService dbManagerService;
+
+	@Autowired
+	private OrderRepository orderRepository;
 
 	private static final double RATING = 0.0;
 
 	public ResponseEntity<Product> productById(int productId) {
+		dbManagerService.execution();
+
 		return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON)
 				.body(productRepository.findProductById(productId));
 	}
@@ -54,7 +61,6 @@ public class ProductService {
 				.body(productRepository.findProductsByRatingAndType(type, RATING));
 	}
 
-
 	public ResponseEntity<Void> upload(ProductSummary summary) {
 		LOG.debug("upload" + summary);
 		if (summary == null)
@@ -62,6 +68,13 @@ public class ProductService {
 		if (summary.getName() == null || summary.getProductType() == null || summary.getPrice() == 0)
 			return new ResponseEntity<Void>(HttpStatus.NOT_ACCEPTABLE);
 
+		
+	
+		/*List<Order> orders= orderRepository.findOrderByUserAndProductId();
+		for(Order order : orders) {
+			System.out.println(order);
+		}*/
+		
 		// System.out.println(summary);
 
 		productRepository.save(new Product(summary));
