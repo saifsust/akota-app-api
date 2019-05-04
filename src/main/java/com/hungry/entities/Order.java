@@ -31,13 +31,26 @@ public class Order implements Serializable {
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, targetEntity = User.class)
 	private User user;
 
+	@JoinColumn(name = "product_id")
+	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, targetEntity = Product.class)
+	private Product product;
+
 	public Order() {
 		super();
 	}
 
-	public Order(User user) {
+	public Order(User user, Product product) {
 		super();
 		this.user = user;
+		this.product = product;
+	}
+
+	public Product getProduct() {
+		return product;
+	}
+
+	public void setProduct(Product product) {
+		this.product = product;
 	}
 
 	public long getOrderId() {

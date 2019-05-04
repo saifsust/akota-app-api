@@ -20,14 +20,14 @@ public class DebugController {
 	@Autowired
 	private OrderRepository orderRepository;
 	@Autowired
-    private DbManagerRepository DbManagerRepository;
-	
+	private DbManagerRepository DbManagerRepository;
+
 	@GetMapping(value = "/")
 	public ResponseEntity<Object> debug() {
-		
-		//DbManagerRepository.execution();
-		
-	   List<Order> orders = orderRepository.findOrders();
+
+		// DbManagerRepository.execution();
+
+		List<Order> orders = orderRepository.findOrderByUserAndProductId();
 		return new ResponseEntity<Object>(orders, HttpStatus.OK);
 	}
 
