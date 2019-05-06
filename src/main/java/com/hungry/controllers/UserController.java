@@ -40,12 +40,12 @@ public class UserController {
 	@Autowired
 	private MultipartFileStoreService MultipartFileStoreService;
 
-	@PostMapping(value = "/registration", consumes = { ConsumeType.JOSN })
+	@PostMapping(value = "/registration", produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<AccessToken> isRegistrationComplete(@RequestBody User user) {
 		log.info("recieve : isRegistrationComplete : " + user.toString());
-		
+
 		System.out.println(user);
-		
+
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 		LocalDate localDate = LocalDate.now();
 		user.setRegistrationDate(localDate.toString());
@@ -61,13 +61,13 @@ public class UserController {
 		return MultipartFileStoreService.store(token, mpf, httpServletRequest);
 	}
 
-	@PostMapping(value = "/login", consumes = { ConsumeType.JOSN })
+	@PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<AccessToken> isAuthorizedUser(@RequestBody User user) {
 		log.info(user.toString());
 		return userService.authorizer(user);
 	}
 
-	@RequestMapping(value = "/profile", method = RequestMethod.GET, produces = ConsumeType.JOSN)
+	@RequestMapping(value = "/profile", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<Profile> profile(@RequestParam("token") String token) {
 		return userService.profile(token);
 	}
