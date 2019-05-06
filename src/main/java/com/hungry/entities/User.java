@@ -25,10 +25,8 @@ public class User implements Serializable {
 	@JsonIgnore
 	private int userId;
 	@Column(name = "first_name")
-	@JsonIgnore
 	private String firstName;
 	@Column(name = "last_name")
-	@JsonIgnore
 	private String lastName;
 	@Column(name = "phone_number")
 	private String phone;
@@ -43,7 +41,6 @@ public class User implements Serializable {
 	@Column(name = "registration_date")
 	private String registrationDate;
 	@Column(name = "user_password")
-	@JsonIgnore
 	private String password;
 	// @Column(name="orders_id")
 	@Transient

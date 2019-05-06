@@ -27,6 +27,8 @@ import com.hungry.services.UserService;
 import com.hungry.services.util.ConsumeType;
 import com.hungry.services.util.MultipartFileStoreService;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
+
 @Controller("userController")
 @RequestMapping(value = "/user")
 public class UserController {
@@ -41,6 +43,9 @@ public class UserController {
 	@PostMapping(value = "/registration", consumes = { ConsumeType.JOSN })
 	public @ResponseBody ResponseEntity<AccessToken> isRegistrationComplete(@RequestBody User user) {
 		log.info("recieve : isRegistrationComplete : " + user.toString());
+		
+		System.out.println(user);
+		
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 		LocalDate localDate = LocalDate.now();
 		user.setRegistrationDate(localDate.toString());

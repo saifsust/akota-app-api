@@ -12,6 +12,8 @@
 	<groupId>com.hungry</groupId>
 	<artifactId>hungry</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<!-- <packaging>war</packaging> -->
+	
 	<name>hungry</name>
 	<description>it is a pizza shop project</description>
 
