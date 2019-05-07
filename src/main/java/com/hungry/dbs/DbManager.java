@@ -1,7 +1,7 @@
 package com.hungry.dbs;
 
 public enum DbManager {
-	USERS("users"), ORDERS("orders"), PRODUCTS("products"), USERS_TYPES("users_types");
+	USERS("users"), ORDERS("orders"), PRODUCTS("products"), USERS_TYPES("users_types"), NOTICATION("notifications");
 	private final String PREFIX = "hungry_";
 	private final String DB = "hungry.";
 	private String table, SQL;
@@ -21,7 +21,20 @@ public enum DbManager {
 			return this.products();
 		if (name().equalsIgnoreCase(USERS_TYPES.toString()))
 			return this.user_types();
+
+		if (name().equalsIgnoreCase(NOTICATION.toString()))
+			return this.notification();
+
 		return "user " + DB;
+	}
+
+	private String notification() {
+
+		SQL = "create table if not exists " + DB + PREFIX + this.table
+				+ "(notification_id int(22) auto_increment not null primary key,";
+		SQL += "notication json";
+		SQL += ")";
+		return SQL;
 	}
 
 	private String users() {
@@ -37,7 +50,7 @@ public enum DbManager {
 	private String orders() {
 		SQL = "create table if not exists " + DB + PREFIX + this.table
 				+ "(order_id int(22) auto_increment not null primary key,";
-		SQL += "products json,total_products int,total_price double,";
+		SQL += "product_id int,total_products int,total_price double,";
 		SQL += "delevery_type varchar(100),delevery_user_id int(22),";
 		SQL += "order_date date,promo_code varchar(200),destinatio json,pickup json)";
 		return SQL;

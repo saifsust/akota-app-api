@@ -32,7 +32,7 @@ public class DebugController {
 	@GetMapping(value = "/debug")
 	public @ResponseBody ResponseEntity<Object> debug() {
 
-		// DbManagerRepository.execution();
+		 DbManagerRepository.execution();
 
 		List<Order> orders = orderRepository.findOrderByUserAndProductId();
 		return new ResponseEntity<Object>(orders, HttpStatus.OK);

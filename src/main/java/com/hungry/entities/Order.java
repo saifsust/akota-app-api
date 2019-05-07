@@ -27,7 +27,7 @@ public class Order implements Serializable {
 	private long orderId;
 
 	// @Column(name = "user_id", nullable = false)
-	@JoinColumn(name = "user_id")
+	@JoinColumn(name = "delevery_user_id")
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, targetEntity = User.class)
 	private User user;
 
