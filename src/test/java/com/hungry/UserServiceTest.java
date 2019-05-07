@@ -29,23 +29,23 @@ public class UserServiceTest {
 		User user = new User();
 		user.setFirstName("Saiful");
 		user.setLastName("Islam");
-		user.setPhone("01686654728");
-		user.setPassword("saiful");
-		user.setEmail("saiful.sust.cse@gmail.com");
-		ResponseEntity<AccessToken> token = userService.register(user);
-		assertThat(token.getStatusCode(), is(HttpStatus.FOUND));
-	}
-
-	@Test
-	public void valid_user_register() {
-		User user = new User();
-		user.setFirstName("Saiful");
-		user.setLastName("Islam");
-		user.setPhone("01686654729");
+		user.setPhone("016866547299");
 		user.setPassword("saiful");
 		user.setEmail("saiful.sust.cse@gmail.com");
 		ResponseEntity<AccessToken> token = userService.register(user);
 		assertThat(token.getStatusCode(), is(HttpStatus.CREATED));
+
+		
+		token = userService.register(user);
+		assertThat(token.getStatusCode(), is(HttpStatus.FOUND));
+
+		
+		
+	}
+
+	@Test
+	public void valid_user_register() {
+
 	}
 
 	@Test

@@ -64,4 +64,9 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	@Query(value = "SELECT user_img_location FROM hungry_users WHERE hungry_users.user_id= :user_id", nativeQuery = true)
 	public String findImageLocalAddresss(@Param("user_id") int userId);
 
+	@Transactional
+	@Modifying
+	@Query(value = "DELETE FROM hungry_users WHERE phone_number=:phone_number", nativeQuery = true)
+	public void deleteUserByPhone(@Param("phone_number") String phoneNumber);
+
 }

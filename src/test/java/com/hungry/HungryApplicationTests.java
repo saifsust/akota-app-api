@@ -6,11 +6,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.hungry.controllers.UserController;
-import com.hungry.models.Profile;
 import com.hungry.services.UserService;
 
 @RunWith(SpringRunner.class)

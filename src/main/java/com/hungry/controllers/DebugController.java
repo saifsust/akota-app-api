@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hungry.entities.Order;
 import com.hungry.repositories.DbManagerRepository;
 import com.hungry.repositories.OrderRepository;
+import com.hungry.repositories.UserRepository;
 
 @Controller
 public class DebugController {
@@ -23,6 +24,9 @@ public class DebugController {
 	private OrderRepository orderRepository;
 	@Autowired
 	private DbManagerRepository DbManagerRepository;
+	
+	@Autowired
+	private UserRepository userRepository;
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public @ResponseBody String start_up() {
@@ -34,6 +38,8 @@ public class DebugController {
 
 		 DbManagerRepository.execution();
 
+		 userRepository.deleteUserByPhone("01686654729");
+		 
 		List<Order> orders = orderRepository.findOrderByUserAndProductId();
 		return new ResponseEntity<Object>(orders, HttpStatus.OK);
 	}
