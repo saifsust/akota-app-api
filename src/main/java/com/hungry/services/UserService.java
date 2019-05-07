@@ -65,8 +65,13 @@ public class UserService {
 
 			accessToken = null;
 
-			if (result != null || user.getPassword().equals(null) || user.getPassword().equals("")) {
+			if (result != null) {
 				LOG.debug("register : findUserByPhoneNumber " + result.toString());
+				return new ResponseEntity<AccessToken>(accessToken, HttpStatus.FOUND);
+			}
+
+			if (user.getPassword() == null || user.getPassword().equals("") || user.getPhone() == null
+					|| user.getPhone().equals(null)) {
 				return new ResponseEntity<AccessToken>(accessToken, HttpStatus.NOT_ACCEPTABLE);
 			}
 
