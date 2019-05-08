@@ -12,8 +12,8 @@
 	<groupId>com.hungry</groupId>
 	<artifactId>hungry</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-<!-- 	<packaging>war</packaging> -->
-	
+	<!-- <packaging>war</packaging> -->
+
 	<name>hungry</name>
 	<description>it is a pizza shop project</description>
 
@@ -75,9 +75,11 @@
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
 		</dependency>
-
-
-
+		<!-- RabbitMQ Dependency -->
+		 <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
 	</dependencies>
 
 	<build>
