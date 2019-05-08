@@ -8,9 +8,13 @@ import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.TopicExchange;
+import org.springframework.amqp.rabbit.annotation.EnableRabbit;
+import org.springframework.amqp.rabbit.annotation.RabbitListenerConfigurer;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
-import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
-import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.rabbit.listener.RabbitListenerEndpointRegistrar;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,16 +26,19 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.messaging.converter.MappingJackson2MessageConverter;
+import org.springframework.messaging.handler.annotation.support.DefaultMessageHandlerMethodFactory;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.hungry.rabbitmq.Receiver;
+import com.hungry.configs.ApplicationConfigReader;
 
 @Configuration
 @SpringBootApplication
@@ -41,11 +48,17 @@ import com.hungry.rabbitmq.Receiver;
 @EntityScan(basePackages = { "com.hungry.entities" })
 @EnableJpaRepositories(basePackages = { "com.hungry.repositories" })
 @EnableTransactionManagement
-public class HungryApplication extends SpringBootServletInitializer implements WebMvcConfigurer {
+@EnableRabbit
+@EnableScheduling
+public class HungryApplication extends SpringBootServletInitializer
+		implements WebMvcConfigurer, RabbitListenerConfigurer {
 
 	public static final String topicExchangeName = "spring-boot-exchange";
 
 	public static final String queueName = "spring-boot";
+
+	@Autowired
+	private ApplicationConfigReader ApplicationConfigReader;
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
@@ -57,34 +70,94 @@ public class HungryApplication extends SpringBootServletInitializer implements W
 	 * RabbitMQ Config start
 	 */
 
+	/* This bean is to read the properties file configs */
 	@Bean
-	Queue queue() {
-		return new Queue(queueName, false);
+	public ApplicationConfigReader applicationConfig() {
+		return new ApplicationConfigReader();
+	}
+
+	/**
+	 * App1 Config
+	 */
+	@Bean
+	public TopicExchange getApp1Exchange() {
+
+		return new TopicExchange(getApplicationConfigReader().getApp1Exchange());
 	}
 
 	@Bean
-	TopicExchange exchange() {
-		return new TopicExchange(topicExchangeName);
+	public Queue getApp1Queue() {
+		return new Queue(getApplicationConfigReader().getApp1Queue());
 	}
 
 	@Bean
-	Binding binding(Queue queue, TopicExchange exchange) {
-		return BindingBuilder.bind(queue).to(exchange).with("foo.bar.#");
+	public Binding declareBindingApp1() {
+		return BindingBuilder.bind(getApp1Queue()).to(getApp1Exchange())
+				.with(getApplicationConfigReader().getApp1RoutingKey());
+	}
+
+	/**
+	 * App1 Config end
+	 */
+
+	/**
+	 * App2 Config
+	 */
+
+	@Bean
+	public TopicExchange getApp2Exchange() {
+		return new TopicExchange(getApplicationConfigReader().getApp2Exchange());
 	}
 
 	@Bean
-	SimpleMessageListenerContainer container(ConnectionFactory connectionFactory,
-			MessageListenerAdapter listenerAdapter) {
-		SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
-		container.setConnectionFactory(connectionFactory);
-		container.setQueueNames(queueName);
-		container.setMessageListener(listenerAdapter);
-		return container;
+	public Queue getApp2Queue() {
+		return new Queue(getApplicationConfigReader().getApp2Queue());
 	}
 
 	@Bean
-	MessageListenerAdapter listenerAdapter(Receiver receiver) {
-		return new MessageListenerAdapter(receiver, "receiveMessage");
+	public Binding declareApp2Binding() {
+		return BindingBuilder.bind(getApp2Queue()).to(getApp2Exchange())
+				.with(getApplicationConfigReader().getApp2RoutingKey());
+	}
+
+	/**
+	 * App2 config end
+	 */
+
+	@Bean
+	public RabbitTemplate rabbitTemplate(final ConnectionFactory connectionFactory) {
+		final RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+		return rabbitTemplate;
+	}
+
+	/*@Bean
+	public Jackson2JsonMessageConverter producerJackson2MessageConverter() {
+		return new Jackson2JsonMessageConverter();
+	}*/
+
+	@Bean
+	public MappingJackson2MessageConverter consumerJackson2MessageConverter() {
+		return new MappingJackson2MessageConverter();
+	}
+
+	@Bean
+	public DefaultMessageHandlerMethodFactory messageHandlerMethodFactory() {
+		DefaultMessageHandlerMethodFactory factory = new DefaultMessageHandlerMethodFactory();
+		factory.setMessageConverter(consumerJackson2MessageConverter());
+		return factory;
+	}
+
+	@Override
+	public void configureRabbitListeners(final RabbitListenerEndpointRegistrar registrar) {
+		registrar.setMessageHandlerMethodFactory(messageHandlerMethodFactory());
+	}
+
+	public ApplicationConfigReader getApplicationConfigReader() {
+		return ApplicationConfigReader;
+	}
+
+	public void setApplicationConfigReader(ApplicationConfigReader applicationConfigReader) {
+		ApplicationConfigReader = applicationConfigReader;
 	}
 
 	/**

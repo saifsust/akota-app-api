@@ -1,5 +1,5 @@
 package com.hungry.rabbitmq;
-
+/*
 import java.util.concurrent.CountDownLatch;
 
 import org.springframework.stereotype.Component;
@@ -23,4 +23,4 @@ public class Receiver {
 	
 	
 
-}
+}*/
