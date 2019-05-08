@@ -130,11 +130,6 @@ public class HungryApplication extends SpringBootServletInitializer
 		return rabbitTemplate;
 	}
 
-	/*@Bean
-	public Jackson2JsonMessageConverter producerJackson2MessageConverter() {
-		return new Jackson2JsonMessageConverter();
-	}*/
-
 	@Bean
 	public MappingJackson2MessageConverter consumerJackson2MessageConverter() {
 		return new MappingJackson2MessageConverter();

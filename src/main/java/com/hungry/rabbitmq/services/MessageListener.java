@@ -23,10 +23,10 @@ public class MessageListener {
 	/**
 	 * Message listener for app1
 	 * 
-	 * @param UserDetails a user defined object used for deserialization of message
+	 * @param User a user defined object used for deserialization of message
 	 */
 	@RabbitListener(queues = { "${app1.queue.name}" })
-	public void receiveMessageForApp1(  User data) {
+	public void receiveMessageForApp1(User data) {
 		log.info("Received message: {} from app1 queue.", data);
 
 		try {
@@ -63,8 +63,8 @@ public class MessageListener {
 	 * 
 	 */
 
-	@RabbitListener(queues = "${app2.queue.name}")
-	public void receiveMessageForApp2(String reqObj) {
+	@RabbitListener(queues = { "${app2.queue.name}" })
+	public void receiveMessageForApp2(User reqObj) {
 		log.info("Received message: {} from app2 queue.", reqObj);
 
 		System.out.println(reqObj);

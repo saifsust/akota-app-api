@@ -57,12 +57,14 @@ public class RabbitMQController {
 	@RequestMapping(path = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> sendMessage(@RequestBody User user) {
 
-		String exchange = getApplicationConfig().getApp1Exchange();
-		String routingKey = getApplicationConfig().getApp1RoutingKey();
+		String exchange = getApplicationConfig().getApp2Exchange();
+		String routingKey = getApplicationConfig().getApp2RoutingKey();
 
 		/* Sending to Message Queue */
 		try {
-			messageSender.sendMessage(rabbitTemplate, exchange, routingKey, user);
+			
+			messageSender.sendMessagePublicCorpus(rabbitTemplate, exchange, routingKey,"http://localhost:8081/add", user);
+			//messageSender.sendMessage(rabbitTemplate, exchange, routingKey, user);
 			return new ResponseEntity<String>(ApplicationConstant.IN_QUEUE, HttpStatus.OK);
 
 		} catch (Exception ex) {
