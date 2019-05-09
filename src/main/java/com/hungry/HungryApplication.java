@@ -1,19 +1,25 @@
 package com.hungry;
 
+import java.util.Arrays;
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.Declarable;
+import org.springframework.amqp.core.ExchangeBuilder;
+import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.QueueBuilder;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.annotation.RabbitListenerConfigurer;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.RabbitListenerEndpointRegistrar;
-import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -53,9 +59,11 @@ import com.hungry.configs.ApplicationConfigReader;
 public class HungryApplication extends SpringBootServletInitializer
 		implements WebMvcConfigurer, RabbitListenerConfigurer {
 
-	public static final String topicExchangeName = "spring-boot-exchange";
+	public static final String topicExchangeName = "spring-boot-exchange2";
 
 	public static final String queueName = "spring-boot";
+
+	public static final String queueName1 = "spring-boot1";
 
 	@Autowired
 	private ApplicationConfigReader ApplicationConfigReader;
@@ -76,6 +84,41 @@ public class HungryApplication extends SpringBootServletInitializer
 		return new ApplicationConfigReader();
 	}
 
+	@Bean
+	public Queue OrderQueue() {
+		return QueueBuilder.durable(queueName).build();
+	}
+
+	@Bean
+	public Queue OrderQueue2() {
+		return QueueBuilder.durable(queueName1).build();
+	}
+
+	/*
+	 * public Queue deadLetterQueue() { return
+	 * QueueBuilder.durable(QUEUE_DEAD_ORDERS); }
+	 */
+
+	@Bean
+	public FanoutExchange orderExchnage() {
+		return (FanoutExchange) ExchangeBuilder.fanoutExchange(topicExchangeName).build();
+	}
+
+	@Bean
+	public Binding orderBinding() {
+		return BindingBuilder.bind(OrderQueue()).to(orderExchnage());
+	}
+
+	@Bean
+	public Binding order1Binding() {
+		return BindingBuilder.bind(OrderQueue2()).to(orderExchnage());
+	}
+
+	@Bean
+	public Binding order2Binding() {
+		return BindingBuilder.bind(getApp1Queue()).to(orderExchnage());
+	}
+
 	/**
 	 * App1 Config
 	 */
@@ -94,6 +137,17 @@ public class HungryApplication extends SpringBootServletInitializer
 	public Binding declareBindingApp1() {
 		return BindingBuilder.bind(getApp1Queue()).to(getApp1Exchange())
 				.with(getApplicationConfigReader().getApp1RoutingKey());
+	}
+
+	@Bean
+	public List<Declarable> fanoutBinding() {
+
+		// Queue fanoutQueue1 = new Queue("fanout.queue1", false); //Queue
+		// fanoutQueue2 = new Queue("fanout.queue2", false);
+		FanoutExchange fanoutExchange = new FanoutExchange("fanout.exchange");
+
+		return Arrays.asList(getApp1Queue(), getApp2Queue(), fanoutExchange,
+				BindingBuilder.bind(getApp1Queue()).to(fanoutExchange));
 	}
 
 	/**

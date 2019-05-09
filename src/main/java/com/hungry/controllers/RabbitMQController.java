@@ -16,6 +16,7 @@ import com.hungry.configs.ApplicationConfigReader;
 import com.hungry.entities.User;
 import com.hungry.rabbitmq.MessageSender;
 import com.hungry.rabbitmq.services.ApplicationConstant;
+import com.hungry.rabbitmq.services.MesageSendService;
 import com.hungry.rabbitmq.services.MessageListener;
 import com.hungry.services.UserService;
 
@@ -27,6 +28,9 @@ public class RabbitMQController {
 	private final RabbitTemplate rabbitTemplate;
 	private ApplicationConfigReader applicationConfig;
 	private MessageSender messageSender;
+
+	@Autowired
+	private MesageSendService mesageSendService;
 
 	@Autowired
 	private MessageListener messageListener;
@@ -62,9 +66,12 @@ public class RabbitMQController {
 
 		/* Sending to Message Queue */
 		try {
-			
-			messageSender.sendMessagePublicCorpus(rabbitTemplate, exchange, routingKey,"http://localhost:8081/add", user);
-			//messageSender.sendMessage(rabbitTemplate, exchange, routingKey, user);
+
+			mesageSendService.send("Hello");
+
+			// messageSender.sendMessagePublicCorpus(rabbitTemplate, exchange,
+			// routingKey,"http://localhost:8081/add", user);
+			// messageSender.sendMessage(rabbitTemplate, exchange, routingKey, user);
 			return new ResponseEntity<String>(ApplicationConstant.IN_QUEUE, HttpStatus.OK);
 
 		} catch (Exception ex) {
