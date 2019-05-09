@@ -91,11 +91,23 @@ public class HungryApplication extends SpringBootServletInitializer
 	}
 
 	@Bean
-	public List<Binding> orderBinding() {
-		return Arrays.asList(BindingBuilder.bind(adminQueue()).to(orderFanoutExchnage()),
-				BindingBuilder.bind(cookerQueue()).to(orderFanoutExchnage()),
-				BindingBuilder.bind(managerQueue()).to(orderFanoutExchnage()),
-				BindingBuilder.bind(deleveryQueue()).to(orderFanoutExchnage()));
+	public Binding adminBinding() {
+		return BindingBuilder.bind(adminQueue()).to(orderFanoutExchnage());
+	}
+
+	@Bean
+	public Binding cookerBinding() {
+		return BindingBuilder.bind(cookerQueue()).to(orderFanoutExchnage());
+	}
+
+	@Bean
+	public Binding managerBinding() {
+		return BindingBuilder.bind(managerQueue()).to(orderFanoutExchnage());
+	}
+
+	@Bean
+	public Binding deleveryBinding() {
+		return BindingBuilder.bind(deleveryQueue()).to(orderFanoutExchnage());
 	}
 
 	/**
