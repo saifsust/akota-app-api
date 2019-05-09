@@ -13,7 +13,7 @@ public class MesageSendService {
 	public void send(String msg) {
 
 		
-		rabbitTemplate.convertAndSend("spring-boot-exchange2","*",msg);
+		rabbitTemplate.convertAndSend("spring-boot-exchange","*",msg);
 	}
 
 }

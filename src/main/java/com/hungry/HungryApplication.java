@@ -59,7 +59,7 @@ import com.hungry.configs.ApplicationConfigReader;
 public class HungryApplication extends SpringBootServletInitializer
 		implements WebMvcConfigurer, RabbitListenerConfigurer {
 
-	public static final String topicExchangeName = "spring-boot-exchange2";
+	public static final String topicExchangeName = "spring-boot-exchange";
 
 	public static final String queueName = "spring-boot";
 
@@ -114,10 +114,7 @@ public class HungryApplication extends SpringBootServletInitializer
 		return BindingBuilder.bind(OrderQueue2()).to(orderExchnage());
 	}
 
-	@Bean
-	public Binding order2Binding() {
-		return BindingBuilder.bind(getApp1Queue()).to(orderExchnage());
-	}
+	
 
 	/**
 	 * App1 Config
@@ -137,17 +134,6 @@ public class HungryApplication extends SpringBootServletInitializer
 	public Binding declareBindingApp1() {
 		return BindingBuilder.bind(getApp1Queue()).to(getApp1Exchange())
 				.with(getApplicationConfigReader().getApp1RoutingKey());
-	}
-
-	@Bean
-	public List<Declarable> fanoutBinding() {
-
-		// Queue fanoutQueue1 = new Queue("fanout.queue1", false); //Queue
-		// fanoutQueue2 = new Queue("fanout.queue2", false);
-		FanoutExchange fanoutExchange = new FanoutExchange("fanout.exchange");
-
-		return Arrays.asList(getApp1Queue(), getApp2Queue(), fanoutExchange,
-				BindingBuilder.bind(getApp1Queue()).to(fanoutExchange));
 	}
 
 	/**

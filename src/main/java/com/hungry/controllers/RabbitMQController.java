@@ -71,7 +71,7 @@ public class RabbitMQController {
 
 			// messageSender.sendMessagePublicCorpus(rabbitTemplate, exchange,
 			// routingKey,"http://localhost:8081/add", user);
-			// messageSender.sendMessage(rabbitTemplate, exchange, routingKey, user);
+			messageSender.sendMessage(rabbitTemplate, exchange, routingKey, user);
 			return new ResponseEntity<String>(ApplicationConstant.IN_QUEUE, HttpStatus.OK);
 
 		} catch (Exception ex) {
