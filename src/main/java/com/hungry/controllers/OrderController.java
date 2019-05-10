@@ -28,7 +28,7 @@ public class OrderController {
 	public ResponseEntity<?> order(@RequestParam("token") String token, @RequestBody Map<String, Object> orders) {
 		LOG.debug("order : token  " + token);
 		LOG.debug("order : orders  " + orders);
-		return orderProducerService.producer(new JSONObject(orders));
+		return orderProducerService.producer(token, new JSONObject(orders));
 	}
 
 }

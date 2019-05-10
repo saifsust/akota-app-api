@@ -51,8 +51,9 @@ public class DebugController {
 		Order order = new Order();
 		order.setUser(user);
 		order.setProduct(prod);
+		order.setDelever(user);
 		orderRepository.save(order);
-		List<Order> orders = orderRepository.findOrderByUserAndProduct();
+		List<Order> orders = orderRepository.findOrderByUserAndProductAndDelever();
 
 		System.out.println(orders);
 
