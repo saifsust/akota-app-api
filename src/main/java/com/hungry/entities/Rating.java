@@ -1,6 +1,7 @@
 package com.hungry.entities;
 
 import java.beans.Transient;
+import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -9,7 +10,11 @@ import javax.persistence.Tuple;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Embeddable
-public class Rating {
+public class Rating implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@Column(name = "rating")
 	private double rating;
 	@Column(name = "total_raters")

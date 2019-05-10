@@ -1,12 +1,17 @@
 package com.hungry.services;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+
+import javax.transaction.Transactional;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +20,7 @@ import org.springframework.stereotype.Service;
 import com.hungry.entities.Order;
 import com.hungry.entities.Product;
 import com.hungry.entities.User;
+import com.hungry.rabbitmq.util.Queues;
 import com.hungry.repositories.OrderRepository;
 import com.hungry.repositories.ProductRepository;
 import com.hungry.repositories.UserRepository;
@@ -31,7 +37,10 @@ public class OrderProducerService {
 	private ProductRepository productRepository;
 	@Autowired
 	private OrderRepository orderRepository;
+	@Autowired
+	private RabbitTemplate rabbitTemplate;
 
+	@Transactional
 	public ResponseEntity<Void> producer(String token, JSONObject jsonObject) {
 
 		LOG.debug("producer : jsonObject-> " + jsonObject.toString());
@@ -56,6 +65,9 @@ public class OrderProducerService {
 				delever = delevery.getJSONObject("delever");
 				pickup = delevery.getJSONObject("pickup");
 				destination = delevery.getJSONObject("destination");
+				/**
+				 * Rider impl in future
+				 */
 
 			}
 		}
@@ -69,6 +81,8 @@ public class OrderProducerService {
 		JSONArray orders = jsonObject.getJSONArray("orders");
 		LOG.debug("producer : orders-> " + orders);
 
+		List<Order> orderList = new ArrayList<Order>();
+
 		for (int i = 0; i < orders.length(); ++i) {
 			JSONObject data = orders.getJSONObject(i);
 			LOG.debug("producer : data-> " + data);
@@ -77,8 +91,10 @@ public class OrderProducerService {
 			int peices = data.getInt("peices");
 			Order order = new Order(buyer, product, peices, peices * product.getSummary().getPrice(),
 					data.getJSONArray("delvery_type").toString(), LocalDate.now().toString());
+			orderList.add(order);
 			orderRepository.save(order);
 		}
+		rabbitTemplate.convertAndSend(Queues.EXCHNAGE, "*", orderList);
 		return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
 	}
 
