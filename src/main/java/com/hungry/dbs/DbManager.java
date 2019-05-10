@@ -48,8 +48,8 @@ public enum DbManager {
 	private String orders() {
 		SQL = "create table if not exists " + DB + PREFIX + this.table
 				+ "(order_id int(22) auto_increment not null primary key,";
-		SQL += "products json,total_products int,total_price double,";
-		SQL += "delevery_type varchar(100),delevery_user_id int(22),";
+		SQL += "product_id int ,peices int,total_price double,";
+		SQL += "delevery_type json,user_id int(22),delever_id int(22),";
 		SQL += "order_date date,promo_code varchar(200),destinatio json,pickup json)";
 		return SQL;
 

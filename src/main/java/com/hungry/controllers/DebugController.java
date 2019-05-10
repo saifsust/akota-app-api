@@ -10,19 +10,28 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.hungry.entities.Order;
+import com.hungry.entities.Product;
+import com.hungry.entities.User;
 import com.hungry.repositories.DbManagerRepository;
 import com.hungry.repositories.OrderRepository;
+import com.hungry.repositories.ProductRepository;
+import com.hungry.repositories.UserRepository;
 
 @Controller
 public class DebugController {
 
 	@Autowired
 	private OrderRepository orderRepository;
+
+	@Autowired
+	private ProductRepository productRepository;
+
 	@Autowired
 	private DbManagerRepository DbManagerRepository;
+	@Autowired
+	private UserRepository userRepository;
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public @ResponseBody String start_up() {
@@ -30,11 +39,23 @@ public class DebugController {
 	}
 
 	@GetMapping(value = "/debug")
-	public @ResponseBody ResponseEntity<Object> debug() {
+	public @ResponseBody ResponseEntity<?> debug() {
 
 		DbManagerRepository.execution();
 
-		List<Order> orders = orderRepository.findOrderByUserAndProductId();
+		User user = userRepository.findUserByUserId(1);
+		System.out.println(user);
+		Product prod = productRepository.findProductById(1);
+		System.out.println(prod);
+
+		Order order = new Order();
+		order.setUser(user);
+		order.setProduct(prod);
+		orderRepository.save(order);
+		List<Order> orders = orderRepository.findOrderByUserAndProduct();
+
+		System.out.println(orders);
+
 		return new ResponseEntity<Object>(orders, HttpStatus.OK);
 	}
 
