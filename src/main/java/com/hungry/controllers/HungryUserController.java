@@ -4,9 +4,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scripting.support.StandardScriptUtils;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.hungry.authentication.AccessTokenGenerator;
 import com.hungry.entities.AccessToken;
 import com.hungry.entities.HungryUser;
 import com.hungry.models.Status;
@@ -36,12 +33,6 @@ public class HungryUserController {
 		Date date = new Date();
 		long time = date.getTime();
 		Timestamp ts = new Timestamp(time);
-		AccessToken accessToken = new AccessToken(AccessTokenGenerator.accessToken(), 84600, ts);
-
-		accessToken.setStatus(HungryUserController.class,"isRegistrationComplete","adhjdhad");
-		// user.setAccessToken(accessToken);
-		System.out.println(user);
-		userService.isSave(user);
 
 		return accessToken;
 		// return new Status(HungryUserController.class,null);
