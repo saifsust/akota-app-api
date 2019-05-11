@@ -1,4 +1,4 @@
-package com.hungry.util;
+package com.hungry.services.util;
 
 public enum TokenStatus {
 	OK, ACCEPTED, NOT_ACCEPTED, CREATED, UNAUTHORIZED, NOT_FOUND, IM_USED;

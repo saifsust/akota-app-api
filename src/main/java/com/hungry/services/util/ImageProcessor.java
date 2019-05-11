@@ -32,10 +32,10 @@ public class ImageProcessor {
 		}
 	}
 
-	public Map<String, String> move(MultipartFile mpf, String destination, HttpServletRequest httpServletRequest) {
+	public Map<String, String> move(MultipartFile mpf, HttpServletRequest httpServletRequest) {
 
 		String name = getName(mpf.toString()) + "_" + mpf.getOriginalFilename();
-		String _path = destination + name;
+		String _path = Global.IMAGE_PATH + name;
 
 		LOG.debug("move : path : " + _path);
 

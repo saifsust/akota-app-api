@@ -1,4 +1,4 @@
-package com.hungry.services;
+package com.hungry.services.util;
 
 import java.security.InvalidKeyException;
 import java.security.Key;
@@ -18,9 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.hungry.util.TokenStatus;
-import com.hungry.util.Type;
 
 @Service
 public class SecurityMaster {

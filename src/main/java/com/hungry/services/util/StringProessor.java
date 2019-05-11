@@ -1,8 +1,6 @@
-package com.hungry.services;
+package com.hungry.services.util;
 
 import org.springframework.stereotype.Service;
-
-import com.hungry.util.Type;
 
 @Service
 public class StringProessor {

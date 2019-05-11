@@ -39,7 +39,7 @@ public class MultipartFileStoreService {
 		String url = null, path = null;
 		try {
 			LOG.debug("store : token : " + token + " | mpf : " + mpf.getContentType());
-			Map<String, String> mapper = imageProcessor.move(mpf, IMAGES_SAVE_PATH, httpServletRequest);
+			Map<String, String> mapper = imageProcessor.move(mpf, httpServletRequest);
 			url = mapper.get("url");
 			path = mapper.get("path");
 			decrytion = securityMaster.decrypt(token);

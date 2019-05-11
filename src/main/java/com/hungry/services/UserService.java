@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import com.hungry.entities.AccessToken;
 import com.hungry.entities.User;
-import com.hungry.repositories.Debugger;
 import com.hungry.repositories.UserRepository;
 import com.hungry.services.util.CryptoMaster;
 import com.hungry.services.util.SecurityMaster;
@@ -38,10 +37,6 @@ public class UserService {
 	private CryptoMaster cryptoMaster;
 	@Autowired
 	public DbManagerService service;
-
-	@Autowired
-	private Debugger debugger;
-
 	private static final int MAX_EXPIRES = 60;
 	private static final int MIN_EXPIRES = 60;
 	private static final int INVALID_USER_ID = 0;
@@ -50,52 +45,26 @@ public class UserService {
 	private AccessToken accessToken;
 
 	@Transactional
-	public ResponseEntity<AccessToken> debug() {
-
-		service.execution();
-		/*
-		 * List<User> users = debugger.findAll();
-		 * 
-		 * for (User user : users) { System.out.println(user); }
-		 */
-		/*
-		 * userRepository.updateUserImage("liton", 1);
-		 * System.out.println(debugger.findUserByPhoneNumber("01521515170"));
-		 * 
-		 * System.out.println(debugger.getLastInsertId());
-		 * 
-		 * Date date = new Date(); long time = date.getTime(); Timestamp ts = new
-		 * Timestamp(time); accessToken = new
-		 * AccessToken(securityMaster.token(TokenStatus.CREATED, 1, Type.USER),
-		 * MAX_EXPIRES, ts);
-		 */
-		// return new ResponseEntity<AccessToken>(accessToken, HttpStatus.OK);
-
-		return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(accessToken);
-	}
-
-	@Transactional
 	public ResponseEntity<AccessToken> register(User user) {
 
-		
 		try {
-			LOG.debug( "register : user "+user.toString());
-			
-			//System.out.println(user);
-			
-			User result = userRepository.findUserByPhoneNumber(user.getPhone());			
+			LOG.debug("register : user " + user.toString());
+
+			// System.out.println(user);
+
+			User result = userRepository.findUserByPhoneNumber(user.getPhone());
 			Date date = new Date();
 			long time = date.getTime();
 			Timestamp ts = new Timestamp(time);
 
 			accessToken = null;
-			
+
 			if (result != null || user.getPassword().equals(null) || user.getPassword().equals("")) {
-				LOG.debug( "register : findUserByPhoneNumber "+result.toString());
+				LOG.debug("register : findUserByPhoneNumber " + result.toString());
 				return new ResponseEntity<AccessToken>(accessToken, HttpStatus.NOT_ACCEPTABLE);
 			}
-				
-			//System.out.println(user);
+
+			// System.out.println(user);
 
 			/**
 			 * 
@@ -104,21 +73,22 @@ public class UserService {
 
 			user.setPassword(cryptoMaster.encrypt(user.getPassword()));
 			user.setRegistrationDate(ts.toString());
-			
+
 			int maxUserId = userRepository.findMaxUserId();
 			++maxUserId;
-			
-			LOG.debug( "register  maxUserId : "+maxUserId);
-			accessToken = new AccessToken(securityMaster.token(TokenStatus.CREATED, maxUserId, Type.USER), MAX_EXPIRES, ts);
+
+			LOG.debug("register  maxUserId : " + maxUserId);
+			accessToken = new AccessToken(securityMaster.token(TokenStatus.CREATED, maxUserId, Type.USER), MAX_EXPIRES,
+					ts);
 			user.setAccessToken(accessToken);
 			userRepository.save(user);
-			
-		}catch (Exception e) {
-			LOG.debug( "register  : "+e.getMessage());
+
+		} catch (Exception e) {
+			LOG.debug("register  : " + e.getMessage());
 			return new ResponseEntity<AccessToken>(accessToken, HttpStatus.NOT_ACCEPTABLE);
 			// TODO: handle exception
 		}
-		
+
 		return new ResponseEntity<AccessToken>(accessToken, HttpStatus.CREATED);
 	}
 

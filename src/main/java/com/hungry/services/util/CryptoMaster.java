@@ -1,4 +1,4 @@
-package com.hungry.services;
+package com.hungry.services.util;
 
 import java.security.Key;
 import java.util.Base64;

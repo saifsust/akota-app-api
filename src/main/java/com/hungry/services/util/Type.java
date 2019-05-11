@@ -1,4 +1,4 @@
-package com.hungry.util;
+package com.hungry.services.util;
 
 public enum Type {
 
