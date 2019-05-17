@@ -21,13 +21,13 @@ public class Order implements Serializable {
 	@Column(name = "order_id")
 	private long orderId;
 	@JoinColumn(name = "user_id")
-	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, targetEntity = User.class)
+	@OneToOne(cascade = CascadeType.MERGE, orphanRemoval = true, targetEntity = User.class)
 	private User user;
 	@JoinColumn(name = "delever_id")
-	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, targetEntity = User.class)
+	@OneToOne(cascade = CascadeType.MERGE, orphanRemoval = true, targetEntity = User.class)
 	private User delever;
 	@JoinColumn(name = "product_id")
-	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, targetEntity = Product.class)
+	@OneToOne(cascade = CascadeType.MERGE, orphanRemoval = true, targetEntity = Product.class)
 	private Product product;
 	@Column(name = "peices")
 	private int peices;
