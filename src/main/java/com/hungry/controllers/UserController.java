@@ -24,10 +24,7 @@ import com.hungry.entities.AccessToken;
 import com.hungry.entities.User;
 import com.hungry.models.Profile;
 import com.hungry.services.UserService;
-import com.hungry.services.util.ConsumeType;
 import com.hungry.services.util.MultipartFileStoreService;
-
-import ch.qos.logback.core.net.SyslogOutputStream;
 
 @Controller("userController")
 @RequestMapping(value = "/user")

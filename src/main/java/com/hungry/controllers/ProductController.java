@@ -3,9 +3,6 @@ package com.hungry.controllers;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.print.attribute.standard.Media;
-import javax.websocket.server.PathParam;
-
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,11 +22,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hungry.entities.Product;
 import com.hungry.entities.ProductSummary;
-import com.hungry.repositories.ProductRepository;
 import com.hungry.repositories.SaleRepository;
 import com.hungry.services.ProductService;
 import com.hungry.services.SaleService;
-import com.hungry.services.util.Contents;
 
 @Controller
 @RequestMapping(value = "/product")

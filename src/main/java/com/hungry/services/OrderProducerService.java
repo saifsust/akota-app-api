@@ -45,7 +45,6 @@ public class OrderProducerService {
 
 		LOG.debug("producer : jsonObject-> " + jsonObject.toString());
 		LOG.debug("producer : token-> " + token);
-
 		JSONObject delever = null, pickup = null, destination = null;
 
 		if (!jsonObject.has("orders"))
@@ -75,7 +74,7 @@ public class OrderProducerService {
 		Map<String, Object> mapper = securityMaster.decrypt(token);
 
 		long userId = (long) mapper.get("user_id");
-		LOG.debug("producer : delevery-> " + userId);
+		LOG.info("producer : delevery-> " + userId);
 		User buyer = userRepository.findUserByUserId((int) userId);
 		LOG.debug("producer : buyer-> " + buyer);
 		JSONArray orders = jsonObject.getJSONArray("orders");
@@ -91,7 +90,12 @@ public class OrderProducerService {
 			int peices = data.getInt("peices");
 			Order order = new Order(buyer, product, peices, peices * product.getSummary().getPrice(),
 					data.getJSONArray("delvery_type").toString(), LocalDate.now().toString());
+			User user = userRepository.findUserByUserId( delever != null?delever.getInt("user_id") :-1);
+			order.setDelever(user);
+			order.setPickup(pickup != null ? pickup.toString() : "");
+			order.setDestination(destination != null ? destination.toString() : "");
 			orderList.add(order);
+
 			orderRepository.save(order);
 		}
 		rabbitTemplate.convertAndSend(Queues.EXCHNAGE, "*", orderList);
