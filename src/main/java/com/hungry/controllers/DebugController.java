@@ -33,10 +33,10 @@ public class DebugController {
 	@Autowired
 	private UserRepository userRepository;
 
-	@RequestMapping(value = "/", method = RequestMethod.GET)
+	/*@RequestMapping(value = "/", method = RequestMethod.GET)
 	public @ResponseBody String start_up() {
 		return "program start '.' ";
-	}
+	}*/
 
 	@GetMapping(value = "/debug")
 	public @ResponseBody ResponseEntity<?> debug() {
