@@ -7,8 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hungry.entities.Order;
@@ -33,10 +31,7 @@ public class DebugController {
 	@Autowired
 	private UserRepository userRepository;
 
-	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public @ResponseBody String start_up() {
-		return "program start '.' ";
-	}
+	
 
 	@GetMapping(value = "/debug")
 	public @ResponseBody ResponseEntity<?> debug() {
