@@ -98,22 +98,12 @@ public class UserService {
 		return new ResponseEntity<AccessToken>(accessToken, HttpStatus.CREATED);
 	}
 
-	public ResponseEntity<AccessToken> authorizer(User user) {
+	public ResponseEntity<AccessToken> authorizer(String phone) {
 
-		User result = userRepository.findUserByPhoneNumber(user.getPhone());
+		User result = userRepository.findUserByPhoneNumber(phone);
 		accessToken = null;
 		if (result == null)
 			return new ResponseEntity<AccessToken>(accessToken, HttpStatus.NOT_FOUND);
-
-		String password = result.getPassword();
-
-		if (password.equals(null) || password.equals(""))
-			return new ResponseEntity<AccessToken>(accessToken, HttpStatus.UNAUTHORIZED);
-
-		password = cryptoMaster.decrypt(password);
-
-		if (!password.equals(user.getPassword()))
-			return new ResponseEntity<AccessToken>(accessToken, HttpStatus.UNAUTHORIZED);
 
 		String token = result.getAccessToken().getAccessToken();
 		int expires = (int) result.getAccessToken().getExpire();

@@ -1,5 +1,6 @@
 package com.hungry.controllers;
 
+import java.security.Principal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,6 +38,9 @@ public class UserController {
 	public UserService userService;
 	@Autowired
 	private MultipartFileStoreService MultipartFileStoreService;
+	
+	
+	
 
 	@PostMapping(value = "/registration", produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<AccessToken> isRegistrationComplete(@RequestBody User user) {
@@ -58,10 +63,11 @@ public class UserController {
 		return MultipartFileStoreService.store(token, mpf, httpServletRequest);
 	}
 
-	@PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody ResponseEntity<AccessToken> isAuthorizedUser(@RequestBody User user) {
-		log.info(user.toString());
-		return userService.authorizer(user);
+	@GetMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody ResponseEntity<AccessToken> isAuthorizedUser(Principal principal) {
+		log.info(principal.getName());
+		return userService.authorizer(principal.getName());
+
 	}
 
 	@RequestMapping(value = "/profile", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

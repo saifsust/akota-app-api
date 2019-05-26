@@ -30,20 +30,12 @@ public class SpringWebSecurityConfig extends WebSecurityConfigurerAdapter {
 			auth.inMemoryAuthentication().withUser(user.getPhone()).password("{noop}"+cryptoMaster.decrypt(user.getPassword())).roles("USER");
 			
 		}
-
-		/*
-		 * auth.inMemoryAuthentication().withUser("user").password("{noop}123").roles(
-		 * "USER").and().withUser("admin") .password("{noop}123").roles("USER",
-		 * "ADMIN");
-		 */
-
 	}
 
 	// Secure the endpoins with HTTP Basic authentication
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-
-		http.httpBasic().and().authorizeRequests().antMatchers(HttpMethod.GET, "/").hasRole("USER").and().csrf()
+		http.httpBasic().and().authorizeRequests().antMatchers(HttpMethod.GET, "/user/login").hasRole("USER").and().csrf()
 				.disable().formLogin().disable();
 
 		// Implementing Token based authentication in this filter
