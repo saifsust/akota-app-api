@@ -35,6 +35,8 @@ public class DebugController {
 
 	@GetMapping(value = "/debug")
 	public @ResponseBody ResponseEntity<?> debug() {
+		
+		System.out.println(userRepository.findAll());
 
 		//DbManagerRepository.execution();
 

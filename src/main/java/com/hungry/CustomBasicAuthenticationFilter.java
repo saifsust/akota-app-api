@@ -10,9 +10,14 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
+import com.hungry.repositories.UserRepository;
+
 public class CustomBasicAuthenticationFilter extends BasicAuthenticationFilter {
 
 
+
+	
+	
     @Autowired
     public CustomBasicAuthenticationFilter(final AuthenticationManager authenticationManager) {
         super(authenticationManager);
