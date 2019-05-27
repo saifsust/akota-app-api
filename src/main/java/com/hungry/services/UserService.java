@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.core.Exchange;
 import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -52,97 +53,149 @@ public class UserService {
 	@Autowired
 	private AmqpAdmin mAmqpAdmin;
 	@Autowired
-	private RabbitTemplate  mRabbitTemplate;
-	
-	
+	private RabbitTemplate mRabbitTemplate;
+
 	private static final int MAX_EXPIRES = 60;
 	private static final int MIN_EXPIRES = 60;
 	private static final int INVALID_USER_ID = 0;
 	private static final String regExpr = "";
 
 	private AccessToken accessToken;
-	
-	
-	
-	public ResponseEntity<?> reply(Principal principal){
-		
+
+	public ResponseEntity<?> reply(Principal principal) {
+
 		System.out.println(principal.getName());
 		String username = "ndd";
-		
+
 		mAmqpAdmin.declareExchange(new Exchange() {
-			
+
 			@Override
-			public boolean shouldDeclare() {
-				// TODO Auto-generated method stub
+			public boolean shouldDeclare() { // TODO Auto-generated method stub
 				return true;
 			}
-			
+
 			@Override
-			public boolean isIgnoreDeclarationExceptions() {
-				// TODO Auto-generated method stub
+			public boolean isIgnoreDeclarationExceptions() { // TODO
 				return false;
 			}
-			
+
 			@Override
-			public Collection<?> getDeclaringAdmins() {
-				// TODO Auto-generated method stub
+			public Collection<?> getDeclaringAdmins() { // TODO Auto-generated
 				return null;
 			}
-			
+
 			@Override
-			public boolean isInternal() {
-				// TODO Auto-generated method stub
+			public boolean isInternal() { 
 				return false;
 			}
-			
+
 			@Override
-			public boolean isDurable() {
-				// TODO Auto-generated method stub
+			public boolean isDurable() { 
 				return false;
 			}
-			
+
 			@Override
-			public boolean isDelayed() {
-				// TODO Auto-generated method stub
+			public boolean isDelayed() { 
 				return false;
 			}
-			
+
 			@Override
-			public boolean isAutoDelete() {
-				// TODO Auto-generated method stub
+			public boolean isAutoDelete() { 
 				return true;
 			}
-			
+
 			@Override
 			public String getType() {
-				// TODO Auto-generated method stub
-				return "topic";
+				return "direct";
 			}
-			
+
 			@Override
 			public String getName() {
-				// TODO Auto-generated method stub
 				return "driver_hailing";
 			}
-			
+
 			@Override
 			public Map<String, Object> getArguments() {
-				// TODO Auto-generated method stub
 				return null;
 			}
 		});
 		
 		
-		String mess = "I call";
 		
-		byte[] data = mess.getBytes();
+		mAmqpAdmin.declareExchange(new Exchange() {
+
+			@Override
+			public boolean shouldDeclare() { // TODO Auto-generated method stub
+				return true;
+			}
+
+			@Override
+			public boolean isIgnoreDeclarationExceptions() { // TODO
+				return false;
+			}
+
+			@Override
+			public Collection<?> getDeclaringAdmins() { // TODO Auto-generated
+				return null;
+			}
+
+			@Override
+			public boolean isInternal() { 
+				return false;
+			}
+
+			@Override
+			public boolean isDurable() { 
+				return false;
+			}
+
+			@Override
+			public boolean isDelayed() { 
+				return false;
+			}
+
+			@Override
+			public boolean isAutoDelete() { 
+				return true;
+			}
+
+			@Override
+			public String getType() {
+				return "topic";
+			}
+
+			@Override
+			public String getName() {
+				return "reply_exchange";
+			}
+
+			@Override
+			public Map<String, Object> getArguments() {
+				return null;
+			}
+		});
 		
-		//mRabbitTemplate.send, routingKey, message);
+
+		mAmqpAdmin.declareQueue(new Queue("reply:ndd"));
 		
-		mRabbitTemplate.send("driver_hailing","driver_hailing:ndd", new Message(data, null));
-		
+		try {
+			mRabbitTemplate.convertAndSend("driver_hailing", "driver_hailing:ndd", principal.getName());
+			long a=0;
+			while(a<1000000000) ++a;
+			
+		  Message msg =	mRabbitTemplate.receive("reply:ndd");
+		  
+		  System.out.println(new String(msg.getBody()));
+			
+
+		} catch (Exception e) {
+
+			System.out.println(e.getMessage());
+
+		}
+
 		return ResponseEntity.ok(null);
-		
+
 	}
 
 	@Transactional
