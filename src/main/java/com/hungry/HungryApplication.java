@@ -4,6 +4,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
+import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.ExchangeBuilder;
@@ -13,6 +14,7 @@ import org.springframework.amqp.core.QueueBuilder;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.annotation.RabbitListenerConfigurer;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.RabbitListenerEndpointRegistrar;
 import org.springframework.boot.SpringApplication;
@@ -70,22 +72,22 @@ public class HungryApplication extends SpringBootServletInitializer
 
 	@Bean
 	public Queue adminQueue() {
-		return QueueBuilder.durable(Queues.ADMIN).build();
+		return QueueBuilder.nonDurable(Queues.ADMIN).autoDelete().build();
 	}
 
 	@Bean
 	public Queue cookerQueue() {
-		return QueueBuilder.durable(Queues.COOKER).build();
+		return QueueBuilder.nonDurable(Queues.COOKER).autoDelete().build();
 	}
 
 	@Bean
 	public Queue deleveryQueue() {
-		return QueueBuilder.durable(Queues.DELEVERY).build();
+		return QueueBuilder.nonDurable(Queues.DELEVERY).autoDelete().build();
 	}
 
 	@Bean
 	public Queue managerQueue() {
-		return QueueBuilder.durable(Queues.MANAGER).build();
+		return QueueBuilder.nonDurable(Queues.MANAGER).autoDelete().build();
 	}
 
 	@Bean
@@ -112,6 +114,8 @@ public class HungryApplication extends SpringBootServletInitializer
 	public Binding deleveryBinding() {
 		return BindingBuilder.bind(deleveryQueue()).to(orderFanoutExchnage());
 	}
+	
+	
 
 	/**
 	 * 
@@ -131,6 +135,11 @@ public class HungryApplication extends SpringBootServletInitializer
 	@Bean
 	public MappingJackson2MessageConverter mappingJackson2MessageConverter() {
 		return new MappingJackson2MessageConverter();
+	}
+	
+	@Bean
+	public AmqpAdmin amqpAdmin(final ConnectionFactory connectionFactory) {
+		return new RabbitAdmin(connectionFactory);
 	}
 
 	@Bean

@@ -1,5 +1,6 @@
 package com.hungry.services;
 
+import java.security.Principal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,10 +42,9 @@ public class OrderProducerService {
 	private RabbitTemplate rabbitTemplate;
 
 	@Transactional
-	public ResponseEntity<Void> producer(String token, JSONObject jsonObject) {
+	public ResponseEntity<Void> producer(Principal principal, JSONObject jsonObject) {
 
 		LOG.debug("producer : jsonObject-> " + jsonObject.toString());
-		LOG.debug("producer : token-> " + token);
 		JSONObject delever = null, pickup = null, destination = null;
 
 		if (!jsonObject.has("orders"))
@@ -71,11 +71,7 @@ public class OrderProducerService {
 			}
 		}
 
-		Map<String, Object> mapper = securityMaster.decrypt(token);
-
-		long userId = (long) mapper.get("user_id");
-		LOG.info("producer : delevery-> " + userId);
-		User buyer = userRepository.findUserByUserId((int) userId);
+		User buyer = userRepository.findUserByPhoneNumber(principal.getName());
 		LOG.debug("producer : buyer-> " + buyer);
 		JSONArray orders = jsonObject.getJSONArray("orders");
 		LOG.debug("producer : orders-> " + orders);

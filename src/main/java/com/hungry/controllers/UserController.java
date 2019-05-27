@@ -38,9 +38,6 @@ public class UserController {
 	public UserService userService;
 	@Autowired
 	private MultipartFileStoreService MultipartFileStoreService;
-	
-	
-	
 
 	@PostMapping(value = "/registration", produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<AccessToken> isRegistrationComplete(@RequestBody User user) {
@@ -61,6 +58,13 @@ public class UserController {
 		log.debug(
 				"recieve : upload_multipartfile : accesstoken : " + token + " multipartfile : " + mpf.getContentType());
 		return MultipartFileStoreService.store(token, mpf, httpServletRequest);
+	}
+
+	@GetMapping(path = "/reply")
+	public @ResponseBody ResponseEntity<?> reply(Principal principal) {
+		log.info(principal.getName());
+		return userService.reply(principal);
+
 	}
 
 	@GetMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)

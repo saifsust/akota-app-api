@@ -1,6 +1,8 @@
 package com.hungry.services;
 
+import java.security.Principal;
 import java.sql.Timestamp;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 
@@ -8,6 +10,10 @@ import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.core.AmqpAdmin;
+import org.springframework.amqp.core.Exchange;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,12 +49,101 @@ public class UserService {
 	@Autowired
 	private Debugger debugger;
 
+	@Autowired
+	private AmqpAdmin mAmqpAdmin;
+	@Autowired
+	private RabbitTemplate  mRabbitTemplate;
+	
+	
 	private static final int MAX_EXPIRES = 60;
 	private static final int MIN_EXPIRES = 60;
 	private static final int INVALID_USER_ID = 0;
 	private static final String regExpr = "";
 
 	private AccessToken accessToken;
+	
+	
+	
+	public ResponseEntity<?> reply(Principal principal){
+		
+		System.out.println(principal.getName());
+		String username = "ndd";
+		
+		mAmqpAdmin.declareExchange(new Exchange() {
+			
+			@Override
+			public boolean shouldDeclare() {
+				// TODO Auto-generated method stub
+				return true;
+			}
+			
+			@Override
+			public boolean isIgnoreDeclarationExceptions() {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			
+			@Override
+			public Collection<?> getDeclaringAdmins() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public boolean isInternal() {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			
+			@Override
+			public boolean isDurable() {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			
+			@Override
+			public boolean isDelayed() {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			
+			@Override
+			public boolean isAutoDelete() {
+				// TODO Auto-generated method stub
+				return true;
+			}
+			
+			@Override
+			public String getType() {
+				// TODO Auto-generated method stub
+				return "topic";
+			}
+			
+			@Override
+			public String getName() {
+				// TODO Auto-generated method stub
+				return "driver_hailing";
+			}
+			
+			@Override
+			public Map<String, Object> getArguments() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+		});
+		
+		
+		String mess = "I call";
+		
+		byte[] data = mess.getBytes();
+		
+		//mRabbitTemplate.send, routingKey, message);
+		
+		mRabbitTemplate.send("driver_hailing","driver_hailing:ndd", new Message(data, null));
+		
+		return ResponseEntity.ok(null);
+		
+	}
 
 	@Transactional
 	public ResponseEntity<AccessToken> register(User user) {
