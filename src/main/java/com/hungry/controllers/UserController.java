@@ -1,7 +1,7 @@
 package com.hungry.controllers;
 
+import java.security.Principal;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -24,7 +24,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.hungry.entities.AccessToken;
 import com.hungry.entities.User;
 import com.hungry.models.Profile;
-import com.hungry.repositories.UserRepository;
 import com.hungry.services.UserService;
 import com.hungry.services.util.MultipartFileStoreService;
 
@@ -39,18 +38,16 @@ public class UserController {
 	@Autowired
 	private MultipartFileStoreService MultipartFileStoreService;
 
-	@Autowired
-	private UserRepository userRepository;
+	@GetMapping(path = "/reply")
+	public @ResponseBody ResponseEntity<?> reply(Principal principal) {
+		log.info(principal.getName());
+		return userService.reply(principal);
 
-	@GetMapping(path = "/debug")
-	public @ResponseBody long debug() {
-	return	userRepository.deleteUserByPhoneNumber("1234567890");
 	}
 
-	@PostMapping(value = "/registration", consumes = { MediaType.APPLICATION_JSON_VALUE })
+	@PostMapping(path = "/registration", produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<AccessToken> isRegistrationComplete(@RequestBody User user) {
 		log.info("recieve : isRegistrationComplete : " + user.toString());
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 		LocalDate localDate = LocalDate.now();
 		user.setRegistrationDate(localDate.toString());
 		return userService.register(user);
@@ -65,14 +62,15 @@ public class UserController {
 		return MultipartFileStoreService.store(token, mpf, httpServletRequest);
 	}
 
-	@PostMapping(value = "/login", consumes = { MediaType.APPLICATION_JSON_VALUE })
-	public @ResponseBody ResponseEntity<AccessToken> isAuthorizedUser(@RequestBody User user) {
-		log.info(user.toString());
-		return userService.authorizer(user);
+	@GetMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody ResponseEntity<AccessToken> isAuthorizedUser(Principal principal) {
+		log.info(principal.getName());
+		return userService.authorizer(principal.getName());
+
 	}
 
 	@RequestMapping(value = "/profile", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody ResponseEntity<Profile> profile(@RequestParam("token") String token) {
-		return userService.profile(token);
+	public @ResponseBody ResponseEntity<Profile> profile(Principal principal) {
+		return userService.profile(principal);
 	}
 }
