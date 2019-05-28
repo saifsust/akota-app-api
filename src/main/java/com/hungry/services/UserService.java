@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import com.hungry.entities.AccessToken;
 import com.hungry.entities.User;
 import com.hungry.models.Profile;
-import com.hungry.repositories.Debugger;
 import com.hungry.repositories.UserRepository;
 import com.hungry.services.util.CryptoMaster;
 import com.hungry.services.util.SecurityMaster;
@@ -37,11 +36,9 @@ public class UserService {
 	private SecurityMaster securityMaster;
 	@Autowired
 	private CryptoMaster cryptoMaster;
-	@Autowired
-	public DbManagerService service;
 
-	@Autowired
-	private Debugger debugger;
+
+
 
 	private static final int MAX_EXPIRES = 60;
 	private static final int MIN_EXPIRES = 60;

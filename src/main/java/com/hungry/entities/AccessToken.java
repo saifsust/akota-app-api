@@ -7,8 +7,6 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Transient;
 
-import com.hungry.models.Status;
-
 @Embeddable
 public class AccessToken implements Serializable {
 

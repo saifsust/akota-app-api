@@ -24,7 +24,6 @@ import com.hungry.entities.AccessToken;
 import com.hungry.entities.User;
 import com.hungry.models.Profile;
 import com.hungry.services.UserService;
-import com.hungry.services.util.ConsumeType;
 import com.hungry.services.util.MultipartFileStoreService;
 
 @Controller("userController")
@@ -38,7 +37,7 @@ public class UserController {
 	@Autowired
 	private MultipartFileStoreService MultipartFileStoreService;
 
-	@PostMapping(value = "/registration", consumes = { ConsumeType.JOSN })
+	@PostMapping(value = "/registration", consumes = { MediaType.APPLICATION_JSON_VALUE })
 	public @ResponseBody ResponseEntity<AccessToken> isRegistrationComplete(@RequestBody User user) {
 		log.info("recieve : isRegistrationComplete : " + user.toString());
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
@@ -56,13 +55,13 @@ public class UserController {
 		return MultipartFileStoreService.store(token, mpf, httpServletRequest);
 	}
 
-	@PostMapping(value = "/login", consumes = { ConsumeType.JOSN })
+	@PostMapping(value = "/login", consumes = { MediaType.APPLICATION_JSON_VALUE })
 	public @ResponseBody ResponseEntity<AccessToken> isAuthorizedUser(@RequestBody User user) {
 		log.info(user.toString());
 		return userService.authorizer(user);
 	}
 
-	@RequestMapping(value = "/profile", method = RequestMethod.GET, produces = ConsumeType.JOSN)
+	@RequestMapping(value = "/profile", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<Profile> profile(@RequestParam("token") String token) {
 		return userService.profile(token);
 	}
