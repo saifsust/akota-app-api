@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.hungry.entities.AccessToken;
 import com.hungry.entities.User;
 import com.hungry.models.Profile;
+import com.hungry.repositories.UserRepository;
 import com.hungry.services.UserService;
 import com.hungry.services.util.MultipartFileStoreService;
 
@@ -36,6 +38,14 @@ public class UserController {
 	public UserService userService;
 	@Autowired
 	private MultipartFileStoreService MultipartFileStoreService;
+
+	@Autowired
+	private UserRepository userRepository;
+
+	@GetMapping(path = "/debug")
+	public @ResponseBody long debug() {
+	return	userRepository.deleteUserByPhoneNumber("1234567890");
+	}
 
 	@PostMapping(value = "/registration", consumes = { MediaType.APPLICATION_JSON_VALUE })
 	public @ResponseBody ResponseEntity<AccessToken> isRegistrationComplete(@RequestBody User user) {

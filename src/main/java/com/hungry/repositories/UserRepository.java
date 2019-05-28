@@ -53,7 +53,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	@Transactional
 	@Modifying
 	@Query(value = "UPDATE hungry_users SET hungry_users.user_img = :img ,hungry_users.user_img_location = :user_img_location  WHERE hungry_users.user_id= :id", nativeQuery = true)
-	public void updateUserImage(@Param("img") String imgUrl, @Param("user_img_location") String user_img_location,
+	public int updateUserImage(@Param("img") String imgUrl, @Param("user_img_location") String user_img_location,
 			@Param("id") int userId);
 
 	/**
@@ -64,5 +64,19 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	 */
 	@Query(value = "SELECT user_img_location FROM hungry_users WHERE hungry_users.user_id= :user_id", nativeQuery = true)
 	public String findImageLocalAddresss(@Param("user_id") int userId);
+
+	/**
+	 * return user_img_location to delete or modify the user image
+	 * 
+	 * @param userId user id
+	 * @return user image local location
+	 */
+	@Query(value = "SELECT user_img FROM hungry_users WHERE hungry_users.user_id= :user_id", nativeQuery = true)
+	public String findImageUri(@Param("user_id") int userId);
+
+	@Transactional
+	@Modifying
+	@Query(value = "DELETE FROM hungry_users WHERE phone_number = :phone_number", nativeQuery = true)
+	public int deleteUserByPhoneNumber(@Param("phone_number") String phoneNumber);
 
 }
