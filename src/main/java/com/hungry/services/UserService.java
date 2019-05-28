@@ -85,22 +85,22 @@ public class UserService {
 			}
 
 			@Override
-			public boolean isInternal() { 
+			public boolean isInternal() {
 				return false;
 			}
 
 			@Override
-			public boolean isDurable() { 
+			public boolean isDurable() {
 				return false;
 			}
 
 			@Override
-			public boolean isDelayed() { 
+			public boolean isDelayed() {
 				return false;
 			}
 
 			@Override
-			public boolean isAutoDelete() { 
+			public boolean isAutoDelete() {
 				return true;
 			}
 
@@ -119,9 +119,7 @@ public class UserService {
 				return null;
 			}
 		});
-		
-		
-		
+
 		mAmqpAdmin.declareExchange(new Exchange() {
 
 			@Override
@@ -140,22 +138,22 @@ public class UserService {
 			}
 
 			@Override
-			public boolean isInternal() { 
+			public boolean isInternal() {
 				return false;
 			}
 
 			@Override
-			public boolean isDurable() { 
+			public boolean isDurable() {
 				return false;
 			}
 
 			@Override
-			public boolean isDelayed() { 
+			public boolean isDelayed() {
 				return false;
 			}
 
 			@Override
-			public boolean isAutoDelete() { 
+			public boolean isAutoDelete() {
 				return true;
 			}
 
@@ -174,19 +172,20 @@ public class UserService {
 				return null;
 			}
 		});
-		
 
 		mAmqpAdmin.declareQueue(new Queue("reply:ndd"));
-		
+
+		String sms = null;
+
 		try {
 			mRabbitTemplate.convertAndSend("driver_hailing", "driver_hailing:ndd", principal.getName());
-			long a=0;
-			while(a<1000000000) ++a;
-			
-		  Message msg =	mRabbitTemplate.receive("reply:ndd");
-		  
-		  System.out.println(new String(msg.getBody()));
-			
+			long a = 0;
+			while (a < 1000000000)
+				++a;
+
+			Message msg = mRabbitTemplate.receive("reply:ndd");
+
+			sms = new String(msg.getBody());
 
 		} catch (Exception e) {
 
@@ -194,7 +193,7 @@ public class UserService {
 
 		}
 
-		return ResponseEntity.ok(null);
+		return ResponseEntity.ok(sms);
 
 	}
 

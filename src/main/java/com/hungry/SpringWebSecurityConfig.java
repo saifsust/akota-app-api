@@ -27,7 +27,7 @@ public class SpringWebSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		List<User> users = userRepository.findAll();
 		for (User user : users) {
-			System.out.print(user);
+			//System.out.print(user);
 			auth.inMemoryAuthentication().withUser(user.getPhone())
 					.password("{noop}" + cryptoMaster.decrypt(user.getPassword())).roles("USER");
 
