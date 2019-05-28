@@ -1,0 +1,33 @@
+
+order:
+{
+
+   "orders":[
+   	{
+   		"product_id":1,
+   		"delvery_type":["home delevery","seat serve"],
+   		"peices":5
+   	}
+   	
+   	],
+   	"order_type":"home delevery",
+   	"delevery":{
+   		
+   		
+   		
+   		"delever":{
+   			"user_id":1
+   		},
+   		
+   		"pickup":{
+   			"lat":12.232434,
+   			"lng":133.55454,
+   			"address":"bhuiyanpara"
+   		},
+   		"destination":{
+   			"lat":12.232434,
+   			"lng":133.55454,
+   			"address":"bhuiyanpara"
+   		}	
+   	}
+}

@@ -13,6 +13,7 @@ import javax.persistence.Transient;
 
 import org.json.JSONArray;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "hungry_users")
@@ -21,6 +22,7 @@ public class User implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "user_id")
+	@JsonIgnore
 	private int userId;
 	@Column(name = "first_name")
 	private String firstName;
@@ -31,11 +33,11 @@ public class User implements Serializable {
 	@Column(name = "email_address")
 	private String email;
 	@Column(name = "user_img")
+	@JsonIgnore
 	private String userImg;
-
 	@Column(name = "user_img_location")
+	@JsonIgnore
 	private String userImgLocation;
-
 	@Column(name = "registration_date")
 	private String registrationDate;
 	@Column(name = "user_password")
@@ -43,7 +45,9 @@ public class User implements Serializable {
 	// @Column(name="orders_id")
 	@Transient
 	private JSONArray OrdersId;
+
 	@Embedded
+	@JsonIgnore
 	private AccessToken accessToken;
 
 	public User() {
@@ -70,6 +74,11 @@ public class User implements Serializable {
 		this.password = password;
 	}
 
+	@Transient
+	public String getFullName() {
+		return this.firstName + " " + this.lastName;
+	}
+
 	public int getUserId() {
 		return userId;
 	}
@@ -92,11 +101,6 @@ public class User implements Serializable {
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
-	}
-
-	@Transient
-	public String getFullName() {
-		return this.firstName + " " + this.lastName;
 	}
 
 	public String getRegistrationDate() {
