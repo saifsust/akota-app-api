@@ -88,8 +88,8 @@ public class OrderProducerService {
 					data.getJSONArray("delvery_type").toString(), LocalDate.now().toString());
 			User user = userRepository.findUserByUserId( delever != null?delever.getInt("user_id") :-1);
 			order.setDelever(user);
-			order.setPickup(pickup != null ? pickup.toString() : "");
-			order.setDestination(destination != null ? destination.toString() : "");
+			order.setPickup(pickup != null ? pickup.toString() :null);
+			order.setDestination(destination != null ? destination.toString() :null);
 			orderList.add(order);
 
 			orderRepository.save(order);
