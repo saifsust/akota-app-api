@@ -1,15 +1,14 @@
 package com.hungry.entities;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Transient;
 
-import com.hungry.models.Status;
-
 @Embeddable
-public class AccessToken extends Status {
+public class AccessToken implements Serializable {
 
 	@Column(name = "access_token")
 	private String accessToken;
@@ -24,12 +23,24 @@ public class AccessToken extends Status {
 	public AccessToken() {
 		super();
 	}
+	
+	
 
 	public AccessToken(String accessToken, int expire, Timestamp accessDate) {
 		super();
 		this.accessToken = accessToken;
 		this.expire = expire;
 		this.accessDate = accessDate;
+	}
+
+
+
+	public AccessToken(int userId, String accessToken, int expire, Timestamp accessDate) {
+		super();
+		this.accessToken = accessToken;
+		this.expire = expire;
+		this.accessDate = accessDate;
+		this.userId = userId;
 	}
 
 	public int getUserId() {
