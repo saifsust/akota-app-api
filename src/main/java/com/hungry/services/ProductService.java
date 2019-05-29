@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import com.hungry.entities.Product;
 import com.hungry.entities.ProductSummary;
-import com.hungry.repositories.OrderRepository;
 import com.hungry.repositories.ProductRepository;
 
 @Service
@@ -23,14 +22,9 @@ public class ProductService {
 	@Autowired
 	private ProductRepository productRepository;
 
-	@Autowired
-	private DbManagerService dbManagerService;
-
-
 	private static final double RATING = 0.0;
 
 	public ResponseEntity<Product> productById(int productId) {
-		dbManagerService.execution();
 
 		return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON)
 				.body(productRepository.findProductById(productId));

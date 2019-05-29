@@ -17,13 +17,13 @@ import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.hungry.entities.AccessToken;
 import com.hungry.entities.User;
 import com.hungry.models.Profile;
-import com.hungry.repositories.Debugger;
 import com.hungry.repositories.UserRepository;
 import com.hungry.services.util.CryptoMaster;
 import com.hungry.services.util.SecurityMaster;
@@ -44,11 +44,6 @@ public class UserService {
 	private SecurityMaster securityMaster;
 	@Autowired
 	private CryptoMaster cryptoMaster;
-	@Autowired
-	public DbManagerService service;
-
-	@Autowired
-	private Debugger debugger;
 
 	@Autowired
 	private AmqpAdmin mAmqpAdmin;
@@ -261,21 +256,23 @@ public class UserService {
 		// Timestamp timestamp = new Timestamp(time);
 		accessToken = new AccessToken(token, expires, timestamp);
 
-		return new ResponseEntity<AccessToken>(accessToken, HttpStatus.FOUND);
+		return ResponseEntity.status(HttpStatus.FOUND).header("content-type", MediaType.APPLICATION_JSON_VALUE)
+				.body(accessToken);
 	}
 
-	public ResponseEntity<Profile> profile(String token) {
+	public ResponseEntity<Profile> profile(Principal principal) {
 
 		Profile profile = null;
 		try {
-			Map<String, Object> info = securityMaster.decrypt(token);
-			long userId = (long) info.get("user_id");
 			User user = null;
-			user = userRepository.findUserByUserId((int) userId);
+			user = userRepository.findUserByPhoneNumber(principal.getName());
+			// System.out.println(user);
 			if (user == null)
 				return new ResponseEntity<Profile>(profile, HttpStatus.NOT_FOUND);
 			profile = new Profile(user);
-			return new ResponseEntity<Profile>(profile, HttpStatus.OK);
+
+			return ResponseEntity.status(HttpStatus.OK).header("content-type", MediaType.APPLICATION_JSON_VALUE)
+					.body(profile);
 
 		} catch (Exception e) {
 			LOG.error("profile : " + e.getMessage());

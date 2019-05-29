@@ -2,7 +2,6 @@ package com.hungry.controllers;
 
 import java.security.Principal;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -39,32 +38,28 @@ public class UserController {
 	@Autowired
 	private MultipartFileStoreService MultipartFileStoreService;
 
-	@PostMapping(value = "/registration", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(path = "/reply")
+	public @ResponseBody ResponseEntity<?> reply(Principal principal) {
+		log.info(principal.getName());
+		return userService.reply(principal);
+
+	}
+
+	@PostMapping(path = "/registration", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<AccessToken> isRegistrationComplete(@RequestBody User user) {
 		log.info("recieve : isRegistrationComplete : " + user.toString());
-
-		System.out.println(user);
-
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 		LocalDate localDate = LocalDate.now();
 		user.setRegistrationDate(localDate.toString());
 		return userService.register(user);
 	}
 
-	@PutMapping(value = "/upload", produces = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PutMapping(value = "/upload", produces = MediaType.MULTIPART_FORM_DATA_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public @ResponseBody ResponseEntity<Void> upload_multipartfile(
 			@RequestParam(required = true, value = "token") String token,
 			@RequestParam(value = "image") MultipartFile mpf, HttpServletRequest httpServletRequest) {
 		log.debug(
 				"recieve : upload_multipartfile : accesstoken : " + token + " multipartfile : " + mpf.getContentType());
 		return MultipartFileStoreService.store(token, mpf, httpServletRequest);
-	}
-
-	@GetMapping(path = "/reply")
-	public @ResponseBody ResponseEntity<?> reply(Principal principal) {
-		log.info(principal.getName());
-		return userService.reply(principal);
-
 	}
 
 	@GetMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -75,7 +70,7 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/profile", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody ResponseEntity<Profile> profile(@RequestParam("token") String token) {
-		return userService.profile(token);
+	public @ResponseBody ResponseEntity<Profile> profile(Principal principal) {
+		return userService.profile(principal);
 	}
 }
