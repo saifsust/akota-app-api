@@ -237,7 +237,8 @@ public class UserService {
 			// TODO: handle exception
 		}
 
-		return new ResponseEntity<AccessToken>(accessToken, HttpStatus.CREATED);
+		return ResponseEntity.status(HttpStatus.CREATED).header("content-type", MediaType.APPLICATION_JSON_VALUE)
+				.body(accessToken);
 	}
 
 	public ResponseEntity<AccessToken> authorizer(String phone) {
