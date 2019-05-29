@@ -55,8 +55,6 @@ public final class UserControllerJUnitTest extends UserAbstractSetUp {
 
 			String phone = "99999999999999";
 			user = new User("Saiful ", "Islam", phone, "saiful.sust.cse@gmail.com", "saiful");
-			System.out.println(user.toJson());
-
 			mMvcResult = mMockMvc.perform(
 					post("/user/registration").contentType(MediaType.APPLICATION_JSON_VALUE).content(user.toJson()))
 					.andExpect(status().isCreated()).andReturn();
