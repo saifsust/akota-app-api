@@ -62,8 +62,6 @@ public class User implements Serializable {
 		this.password = password;
 	}
 
-	
-	
 	public User(String firstName, String lastName, String phone, String email, String password) {
 		super();
 		this.firstName = firstName;
@@ -176,6 +174,11 @@ public class User implements Serializable {
 
 	public void setOrdersId(JSONArray ordersId) {
 		OrdersId = ordersId;
+	}
+
+	public String toJson() {
+		return "{  \"firstName\":\"" + firstName + "\", \"lastName\":\"" + lastName + "\",\"phone\":\"" + phone
+				+ "\",\"email\":\"" + email + "\", \"password\":\"" + password + "\"}";
 	}
 
 	@Override
