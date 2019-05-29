@@ -1,4 +1,4 @@
-package com.hungry;
+package com.hungry.user;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -14,6 +14,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.hungry.entities.User;
+
+
 
 public final class UserControllerJUnitTest extends UserAbstractSetUp {
 

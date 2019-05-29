@@ -1,4 +1,4 @@
-package com.hungry;
+package com.hungry.user;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -46,7 +46,7 @@ public abstract class UserAbstractSetUp {
 	protected User user;
 
 	@Before
-	public void user_save_test() {
+	public final void user_save_test() {
 
 		/**
 		 * MockMvc set up for mvc test
@@ -70,7 +70,7 @@ public abstract class UserAbstractSetUp {
 	}
 
 	@After
-	public void delete_user_test() {
+	public final void delete_user_test() {
 		assertEquals("User delete successfully", 1, userRepository.deleteUserByPhoneNumber(phone));
 	}
 

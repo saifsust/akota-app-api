@@ -1,4 +1,4 @@
-package com.hungry;
+package com.hungry.user;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;

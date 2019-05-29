@@ -3,8 +3,10 @@ package com.hungry.repositories;
 import java.util.List;
 
 import javax.persistence.Tuple;
+import javax.transaction.Transactional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -48,4 +50,9 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 	@Query(value = "SELECT * FROM hungry_products WHERE product_name = :product_name and rating >= :rating", nativeQuery = true)
 	public List<Product> findProductsByRatingAndName(@Param("product_name") String productName,
 			@Param("rating") double rating);
+
+	@Transactional
+	@Modifying
+	@Query(value = "DELETE FROM hungry_products WHERE product_id = :product_id", nativeQuery = true)
+	public int deleteProductById(@Param("product_id") long productId);
 }
