@@ -8,6 +8,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
@@ -19,30 +21,12 @@ import com.hungry.entities.User;
 import com.hungry.repositories.UserRepository;
 import com.hungry.services.UserService;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest
-public class UserServiceJUnitTest {
+public final class UserServiceJUnitTest extends UserAbstractSetUp {
+
+	private static final Logger LOG = (Logger) LoggerFactory.getLogger(UserServiceJUnitTest.class);
 
 	@Autowired
 	private UserService userService;
-	@Autowired
-	private UserRepository userRepository;
-
-	private static final String phone = "1234567890";
-	private static final int expires = 60;
-	private int userId;
-	User user = new User("Saiful", "Islam", phone, "saiful.sust.cse@gmail.com", "test");
-
-	@Before
-	public void preprocessor() {
-		ResponseEntity<AccessToken> token = userService.register(user);
-		assertNotNull("Not null token", token);
-		assertEquals(HttpStatus.CREATED, token.getStatusCode());
-		assertNotEquals("is token \"\"?", "", token.getBody().getAccessToken());
-		assertNotEquals("is token null?", null, token.getBody().getAccessToken());
-		assertEquals("token expires ", expires, token.getBody().getExpire());
-
-	}
 
 	@Test
 	public void re_register() {
@@ -69,12 +53,6 @@ public class UserServiceJUnitTest {
 		assertEquals(HttpStatus.NOT_FOUND, token.getStatusCode());
 		assertEquals("token must null ", null, token.getBody());
 
-	}
-
-	@After
-	public void postprocessor() {
-		int isDelete = userRepository.deleteUserByPhoneNumber(phone);
-		assertEquals("is user deleted?", 1, isDelete);
 	}
 
 }

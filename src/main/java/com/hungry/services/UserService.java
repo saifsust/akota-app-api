@@ -17,6 +17,7 @@ import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -255,7 +256,8 @@ public class UserService {
 		// Timestamp timestamp = new Timestamp(time);
 		accessToken = new AccessToken(token, expires, timestamp);
 
-		return new ResponseEntity<AccessToken>(accessToken, HttpStatus.FOUND);
+		return ResponseEntity.status(HttpStatus.FOUND).header("content-type", MediaType.APPLICATION_JSON_VALUE)
+				.body(accessToken);
 	}
 
 	public ResponseEntity<Profile> profile(Principal principal) {
@@ -264,10 +266,13 @@ public class UserService {
 		try {
 			User user = null;
 			user = userRepository.findUserByPhoneNumber(principal.getName());
+			// System.out.println(user);
 			if (user == null)
 				return new ResponseEntity<Profile>(profile, HttpStatus.NOT_FOUND);
 			profile = new Profile(user);
-			return new ResponseEntity<Profile>(profile, HttpStatus.OK);
+
+			return ResponseEntity.status(HttpStatus.OK).header("content-type", MediaType.APPLICATION_JSON_VALUE)
+					.body(profile);
 
 		} catch (Exception e) {
 			LOG.error("profile : " + e.getMessage());

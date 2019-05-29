@@ -45,7 +45,7 @@ public class UserController {
 
 	}
 
-	@PostMapping(path = "/registration", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(path = "/registration", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<AccessToken> isRegistrationComplete(@RequestBody User user) {
 		log.info("recieve : isRegistrationComplete : " + user.toString());
 		LocalDate localDate = LocalDate.now();
@@ -53,7 +53,7 @@ public class UserController {
 		return userService.register(user);
 	}
 
-	@PutMapping(value = "/upload", produces = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PutMapping(value = "/upload", produces = MediaType.MULTIPART_FORM_DATA_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public @ResponseBody ResponseEntity<Void> upload_multipartfile(
 			@RequestParam(required = true, value = "token") String token,
 			@RequestParam(value = "image") MultipartFile mpf, HttpServletRequest httpServletRequest) {

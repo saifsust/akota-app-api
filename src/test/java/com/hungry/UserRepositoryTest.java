@@ -28,34 +28,9 @@ import com.hungry.services.util.Type;
  * @author saif-sust
  * @phone 01686654727
  * 
- *        this class is for test user repository
  */
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest
-public class UserRepositoryTest {
-
-	@Autowired
-	private UserRepository userRepository;
-	@Autowired
-	private SecurityMaster securityMaster;
-
-	private static final String phone = "1234567890";
-	private int userId;
-
-	@Before
-	public void user_save_test() {
-		User user = new User("Saiful", "Islam", phone, "test");
-		Date date = new Date();
-		long time = date.getTime();
-		Timestamp ts = new Timestamp(time);
-		AccessToken accessToken = new AccessToken(securityMaster.token(TokenStatus.CREATED, 10, Type.USER), 13135613,
-				ts);
-		user.setAccessToken(accessToken);
-		User save = userRepository.save(user);
-		this.userId = save.getUserId();
-		assertNotNull("User save successfully", save);
-	}
+public final class UserRepositoryTest extends UserAbstractSetUp {
 
 	@Test
 	public void findUserByPhoneNumber() {
@@ -88,11 +63,6 @@ public class UserRepositoryTest {
 		String dbImageUri = userRepository.findImageUri(userId);
 		assertEquals("user updateed check value must be 1 ", location, dbLocation);
 		assertEquals("user updateed check value must be 1 ", imageUri, dbImageUri);
-	}
-
-	@After
-	public void delete_user_test() {
-		assertEquals("User delete successfully", 1, userRepository.deleteUserByPhoneNumber(phone));
 	}
 
 }
