@@ -32,6 +32,10 @@ public class User implements Serializable {
 	private String phone;
 	@Column(name = "email_address")
 	private String email;
+
+	@Column(name = "user_type")
+	private String userType;
+
 	@Column(name = "user_img")
 	@JsonIgnore
 	private String userImg;
@@ -54,21 +58,21 @@ public class User implements Serializable {
 		super();
 	}
 
-	public User(String firstName, String lastName, String phone, String password) {
+	public User(String firstName, String lastName, String phone, String userType) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.phone = phone;
-		this.password = password;
+		this.userType = userType;
 	}
 
-	public User(String firstName, String lastName, String phone, String email, String password) {
+	public User(String firstName, String lastName, String phone, String email, String userType) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.phone = phone;
 		this.email = email;
-		this.password = password;
+		this.userType = userType;
 	}
 
 	public User(String firstName, String lastName, String phone, String userImg, String userImgLocation,
@@ -86,6 +90,14 @@ public class User implements Serializable {
 	@Transient
 	public String getFullName() {
 		return this.firstName + " " + this.lastName;
+	}
+
+	public String getUserType() {
+		return userType;
+	}
+
+	public void setUserType(String userType) {
+		this.userType = userType;
 	}
 
 	public int getUserId() {
