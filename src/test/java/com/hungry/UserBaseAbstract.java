@@ -27,7 +27,7 @@ import com.hungry.services.util.Type;
 
 @SpringBootTest
 @RunWith(SpringJUnit4ClassRunner.class)
-public abstract class UserAbstractSetUp {
+public abstract class UserBaseAbstract {
 
 	@Autowired
 	protected UserRepository userRepository;
@@ -63,6 +63,7 @@ public abstract class UserAbstractSetUp {
 		Timestamp ts = new Timestamp(time);
 		AccessToken accessToken = new AccessToken(securityMaster.token(TokenStatus.CREATED, 10, Type.USER), 13135613,
 				ts);
+		user.setUserType("USER");
 		user.setAccessToken(accessToken);
 		User save = userRepository.save(user);
 		this.userId = save.getUserId();

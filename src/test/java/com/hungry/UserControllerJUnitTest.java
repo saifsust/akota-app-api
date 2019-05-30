@@ -15,7 +15,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.hungry.entities.User;
 
-public final class UserControllerJUnitTest extends UserAbstractSetUp {
+public final class UserControllerJUnitTest extends UserBaseAbstract {
 
 	private static final Logger LOG = (Logger) LoggerFactory.getLogger(UserControllerJUnitTest.class);
 
@@ -23,8 +23,8 @@ public final class UserControllerJUnitTest extends UserAbstractSetUp {
 	@WithMockUser(username = phone, password = password, roles = "USER")
 	public void profile() {
 		try {
-			mMvcResult = mMockMvc
-					.perform(MockMvcRequestBuilders.get("/user/profile").contentType(MediaType.APPLICATION_JSON_VALUE))
+			mMvcResult = mMockMvc.perform(
+					MockMvcRequestBuilders.get("/user/public/profile").contentType(MediaType.APPLICATION_JSON_VALUE))
 					.andExpect(status().isOk()).andReturn();
 			MockHttpServletResponse response = mMvcResult.getResponse();
 			assertEquals("content-type", MediaType.APPLICATION_JSON_VALUE, response.getContentType());

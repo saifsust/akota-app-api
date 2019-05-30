@@ -21,7 +21,7 @@ import com.hungry.entities.User;
 import com.hungry.repositories.UserRepository;
 import com.hungry.services.UserService;
 
-public final class UserServiceJUnitTest extends UserAbstractSetUp {
+public final class UserServiceJUnitTest extends UserBaseAbstract {
 
 	private static final Logger LOG = (Logger) LoggerFactory.getLogger(UserServiceJUnitTest.class);
 
