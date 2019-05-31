@@ -30,7 +30,7 @@ import com.hungry.services.util.Type;
  * 
  */
 
-public final class UserRepositoryTest extends UserAbstractSetUp {
+public final class UserRepositoryTest extends UserBaseAbstract {
 
 	@Test
 	public void findUserByPhoneNumber() {

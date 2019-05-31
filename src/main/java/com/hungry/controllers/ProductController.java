@@ -41,7 +41,7 @@ public class ProductController {
 	@Autowired
 	private SaleRepository saleRepository;
 
-	@PostMapping(value = "/upload", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "/dealer/upload", produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin
 	public @ResponseBody ResponseEntity<Void> upload(RequestEntity<HashMap<String, Object>> summary) {
 		LOG.debug("upload : " + summary);
@@ -74,7 +74,7 @@ public class ProductController {
 		return productService.retrieveByBestType(type);
 	}
 
-	@GetMapping(value = "retreive/{productId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "retreive/id/{productId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin
 	public @ResponseBody ResponseEntity<Product> productById(@PathVariable("productId") int productId) {
 		return productService.productById(productId);

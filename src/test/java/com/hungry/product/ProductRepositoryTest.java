@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.hungry.entities.Product;
 import com.hungry.repositories.SaleRepository;
 
-public final class ProductRepositoryTest extends BaseAbstract {
+public final class ProductRepositoryTest extends ProductBaseAbstract {
 
 	@Test
 	public void findProductSummaryByName() {

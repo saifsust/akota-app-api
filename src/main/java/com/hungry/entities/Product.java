@@ -105,6 +105,19 @@ public class Product implements Serializable {
 		this.launch = launch;
 	}
 
+	public String toJson() {
+
+		return "{" + 
+				"	\"name\": \"Nattional Fan\"," + 
+				"	" + 
+				"        \"detail\":{" + 
+				"            \"about\":\"It is an amanging fan \"" + 
+				"        	}," +  
+				"        \"price\": 1500.00," + 
+				"        \"productType\": \"fan\"" +  
+				"}";
+	}
+
 	@Override
 	public String toString() {
 		return "Product [productId=" + productId + ", summary=" + summary + ", discount=" + discount + ", rating="

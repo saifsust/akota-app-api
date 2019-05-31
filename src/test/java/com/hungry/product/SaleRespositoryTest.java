@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hungry.repositories.SaleRepository;
 
-public final class SaleRespositoryTest extends BaseAbstract {
+public final class SaleRespositoryTest extends ProductBaseAbstract {
 
 	@Autowired
 	private SaleRepository saleRepository;

@@ -21,6 +21,10 @@ import com.hungry.services.util.CryptoMaster;
 public class SpringWebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	private static final Logger LOG = (Logger) LoggerFactory.getLogger(SpringWebSecurityConfig.class);
+	private static final String USER = "USER";
+	private static final String ADMIN = "ADMIN";
+	private static final String DEALER = "DEALER";
+	private static final String RIDER = "RIDER";
 
 	@Autowired
 	private UserRepository userRepository;
@@ -32,7 +36,7 @@ public class SpringWebSecurityConfig extends WebSecurityConfigurerAdapter {
 		for (User user : users) {
 			LOG.debug(user.toString());
 			auth.inMemoryAuthentication().withUser(user.getPhone())
-					.password("{noop}" + cryptoMaster.decrypt(user.getPassword())).roles("USER");
+					.password("{noop}" + cryptoMaster.decrypt(user.getPassword())).roles(user.getUserType());
 
 		}
 
@@ -42,11 +46,16 @@ public class SpringWebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.httpBasic().and().authorizeRequests().antMatchers(HttpMethod.GET, "/user/upload").hasRole("USER")
-				.antMatchers(HttpMethod.GET, "/user/login").hasRole("USER").antMatchers(HttpMethod.GET, "/user/profile")
-				.hasRole("USER").antMatchers(HttpMethod.POST, "/order").hasRole("USER")
-				.antMatchers(HttpMethod.POST, "/receiver").hasRole("USER")
-				.antMatchers(HttpMethod.POST, "/user/registration").anonymous().and().csrf().disable().formLogin()
-				.disable();
+				.antMatchers(HttpMethod.GET, "/user/login").permitAll()
+				.antMatchers(HttpMethod.GET, "/user/public/profile").hasRole(USER)
+				.antMatchers(HttpMethod.GET, "/user/admin/profile").hasRole(ADMIN)
+				.antMatchers(HttpMethod.GET, "/user/dealer/profile").hasRole(DEALER)
+				.antMatchers(HttpMethod.GET, "/user/rider/profile").hasRole(RIDER)
+				.antMatchers(HttpMethod.POST, "/user/registration").anonymous()
+				.antMatchers(HttpMethod.POST, "/product/dealer/upload").hasRole(DEALER)
+				.antMatchers(HttpMethod.GET, "/product/retreive/**").permitAll()
+				.antMatchers(HttpMethod.POST, "/order").permitAll().antMatchers(HttpMethod.POST, "/receiver")
+				.hasRole("USER").and().csrf().disable().formLogin().disable();
 
 	}
 

@@ -2,24 +2,23 @@ package com.hungry.product;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import com.hungry.entities.Product;
 import com.hungry.entities.ProductSummary;
-import com.hungry.entities.Sale;
 import com.hungry.repositories.ProductRepository;
-import com.hungry.repositories.SaleRepository;
+import com.hungry.user.UserBaseAbstract;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest
-public abstract class BaseAbstract {
+public abstract class ProductBaseAbstract extends UserBaseAbstract {
 
 	@Autowired
 	protected ProductRepository productRepository;
 
+	
 	private ProductSummary mProductSummary;
 
 	protected String name = "Test Product";
@@ -29,6 +28,13 @@ public abstract class BaseAbstract {
 
 	@Before
 	public final void set_up() {
+
+		/**
+		 * mock set up
+		 */
+
+
+
 		mProductSummary = new ProductSummary(name, 2222222, type);
 		mProduct = new Product(mProductSummary);
 		this.mProduct = productRepository.save(mProduct);
