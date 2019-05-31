@@ -45,10 +45,11 @@ public class SpringWebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.GET, "/user/login").hasRole("USER")
 				.antMatchers(HttpMethod.GET, "/user/public/profile").hasRole("USER")
 				.antMatchers(HttpMethod.GET, "/user/admin/profile").hasRole("ADMIN")
-				.antMatchers(HttpMethod.POST, "/order").hasRole("USER")
-				.antMatchers(HttpMethod.POST, "/receiver").hasRole("USER")
-				.antMatchers(HttpMethod.POST, "/user/registration").anonymous().and().csrf().disable().formLogin()
-				.disable();
+				.antMatchers(HttpMethod.GET, "/user/dealer/profile").hasRole("DEALER")
+				.antMatchers(HttpMethod.GET, "/user/rider/profile").hasRole("RIDER")
+				.antMatchers(HttpMethod.POST, "/order").hasRole("USER").antMatchers(HttpMethod.POST, "/receiver")
+				.hasRole("USER").antMatchers(HttpMethod.POST, "/user/registration").anonymous().and().csrf().disable()
+				.formLogin().disable();
 
 	}
 

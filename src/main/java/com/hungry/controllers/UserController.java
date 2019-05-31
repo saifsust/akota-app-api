@@ -69,9 +69,10 @@ public class UserController {
 
 	}
 
-	@RequestMapping(value = { "/public/profile",
-			"/admin/profile" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = { "/public/profile", "/admin/profile", "/dealer/profile",
+			"/rider/profile" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<Profile> profile(Principal principal) {
+		log.debug(principal.getName());
 		return userService.profile(principal);
 	}
 }

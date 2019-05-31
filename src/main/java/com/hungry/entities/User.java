@@ -58,32 +58,13 @@ public class User implements Serializable {
 		super();
 	}
 
-	public User(String firstName, String lastName, String phone, String userType) {
-		super();
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.phone = phone;
-		this.userType = userType;
-	}
-
-	public User(String firstName, String lastName, String phone, String email, String userType) {
+	public User(String firstName, String lastName, String phone, String email, String userType, String password) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.phone = phone;
 		this.email = email;
 		this.userType = userType;
-	}
-
-	public User(String firstName, String lastName, String phone, String userImg, String userImgLocation,
-			String registrationDate, String password) {
-		super();
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.phone = phone;
-		this.userImg = userImg;
-		this.userImgLocation = userImgLocation;
-		this.registrationDate = registrationDate;
 		this.password = password;
 	}
 
